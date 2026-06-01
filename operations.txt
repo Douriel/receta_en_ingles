@@ -1,0 +1,29 @@
+
+Main page description:
+ - Recipe list:
+    - Displays all the recipes name.
+    - There is a button to create a new Recipe:
+        - You should be able to select the already created ingredients or create a new one from here.
+ - Storeroom:
+    - Displays a list of all the ingredients registered and the number you have.
+    - Button to register new ingredients.
+
+
+-----
+Operations that the user should be able to perform:
+
+Related with ingredient.
+
+- Create new ingredient.
+- Delete an ingredient.
+- Modify an ingredient.
+
+
+Related with Recipe:
+
+- Create new Recipe.
+    - Using already created ingredient.
+    - Creating new ingredients.
+- Delete an Recipe.
+- Modify an Recipe.
+
