@@ -5,7 +5,7 @@ from recipe import RecipeDto
 from ingredient import IngredientDto
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, create_engine
+from sqlalchemy import delete, select, create_engine
 
 
 from BBDD import IngredientModel, RecipeModel 
@@ -72,7 +72,6 @@ def read_ingredents():
 @app.post("/ingredient/")
 def add_ingredient(ingredient:IngredientDto):
     session = Session(engine)
-    print(ingredient)
     # First thing is to check if this item is listed in the DB
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.name.in_([ingredient.name]))).one_or_none()
 
@@ -85,3 +84,17 @@ def add_ingredient(ingredient:IngredientDto):
     session.commit()
     
     return JSONResponse(status_code=200, content="Ingredient created")
+
+@app.delete("/ingredient/")
+def delete_ingredient(ingredient:IngredientDto):
+    session = Session(engine)
+    # Find if the ingredient is in the db
+    stmt = session.scalars(select(IngredientModel).where(IngredientModel.name.in_([ingredient.name]))).one_or_none()
+    # if not found it cannot be deleted
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+    session.delete(stmt)
+    session.commit()
+
+    return JSONResponse(status_code=200, content="Ingredient deleted")
+
