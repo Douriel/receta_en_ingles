@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+
 from pydantic import BaseModel
 from recipe import RecipeDto
 from ingredient import IngredientDto
 
 from sqlalchemy.orm import Session
-from sqlalchemy import delete, select, create_engine
+from sqlalchemy import delete, select, create_engine, update
 
 
 from BBDD import IngredientModel, RecipeModel 
@@ -27,10 +29,6 @@ class Item(BaseModel):
     is_offer: bool | None = None
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: str | None = None):
@@ -43,18 +41,12 @@ def update_item(item_id: int, item: Item):
 
 
 
-@app.get("/test")
-def read_recipe():
-    return {"uuid" : uuid4()}
-
-
 
 # Methods related with ingredients
 
 # Get a list of all the ingredients
-
 @app.get("/ingredients")
-def read_ingredents():
+def get_ingredents():
     session = Session(engine)
 
     stmt = select(IngredientModel)
@@ -63,33 +55,44 @@ def read_ingredents():
 
     for ingredient_model in session.scalars(stmt):
         ingredient_list.append(IngredientDto.from_model(ingredient_model))
-        
-    session.commit()
-    return JSONResponse(content=ingredient_list)
 
+    return JSONResponse(content=jsonable_encoder(ingredient_list))
 
+@app.get("/ingredients/{ingredient_uuid}")
+def get_ingredient(ingredient_uuid):
+    session = Session(engine)
+
+    stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+    
+    return JSONResponse(content=jsonable_encoder(IngredientDto.from_model(stmt)))
+
+    
 # Create a new ingredient
 @app.post("/ingredient/")
 def add_ingredient(ingredient:IngredientDto):
     session = Session(engine)
     # First thing is to check if this item is listed in the DB
-    stmt = session.scalars(select(IngredientModel).where(IngredientModel.name.in_([ingredient.name]))).one_or_none()
+    stmt = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
 
     if(stmt is not None):
         return JSONResponse(status_code=400, content="Ingredient already on data base")
     
-    ingredient_model = IngredientModel(id=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity)
+    ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity)
 
     session.add(ingredient_model)
     session.commit()
     
     return JSONResponse(status_code=200, content="Ingredient created")
 
-@app.delete("/ingredient/")
-def delete_ingredient(ingredient:IngredientDto):
+# Delete one ingredient
+@app.delete("/ingredient/{ingredient_uuid}")
+def delete_ingredient(ingredient_uuid):
     session = Session(engine)
     # Find if the ingredient is in the db
-    stmt = session.scalars(select(IngredientModel).where(IngredientModel.name.in_([ingredient.name]))).one_or_none()
+    stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
     # if not found it cannot be deleted
     if(stmt is None):
         return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
@@ -97,4 +100,24 @@ def delete_ingredient(ingredient:IngredientDto):
     session.commit()
 
     return JSONResponse(status_code=200, content="Ingredient deleted")
+
+
+# Update one ingredient
+@app.put("/ingredient/{ingredient_uuid}")
+def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
+    session = Session(engine)
+    # Find if the ingredient exist in the data base
+    stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
+    # if not found the ingrediet cannot be updatad
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+    
+    stmt.name = ingredient.name
+    stmt.quantity = ingredient.quantity
+    
+    session.commit()
+    return JSONResponse(status_code=200, content="Ingredient updated")
+
+
+## CRUD Recipe
 

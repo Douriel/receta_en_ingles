@@ -17,7 +17,8 @@ recipe_ingredient = Table(
 
 class IngredientModel(Base):
     __tablename__ = "ingredient"
-    id : Mapped[str] = mapped_column(String(36), primary_key=True)
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uuid : Mapped[str] = mapped_column(String(36), index=True)
     name : Mapped[str] = mapped_column(String(64), unique=True)
     quantity : Mapped[int] = mapped_column(default=0)
 
@@ -30,7 +31,8 @@ class IngredientModel(Base):
     
 class RecipeModel(Base):
     __tablename__ = "recipe"
-    id : Mapped[str] = mapped_column(String(36), primary_key=True)
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uuid : Mapped[str] = mapped_column(String(36), index=True)
     name : Mapped[str] = mapped_column(String(64), unique=True)
     description : Mapped[str] = mapped_column(Text(), default="")
     steps : Mapped[str] = mapped_column(Text(), default="")

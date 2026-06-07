@@ -4,12 +4,13 @@ from uuid import UUID
 from BBDD import IngredientModel
 
 class IngredientDto(BaseModel):
-    id: str
+    uuid: str
     name: str
     quantity: int
     
     @staticmethod
     def from_model(ingredient_model:IngredientModel):
-        return IngredientDto(id = ingredient_model.id, 
-                             name = ingredient_model.name, 
-                             quantity = ingredient_model.quantity)
+
+        return IngredientDto(uuid = ingredient_model.uuid, 
+                             name = str(ingredient_model.name), 
+                             quantity = int(ingredient_model.quantity))
