@@ -15,7 +15,7 @@ engine = create_engine("sqlite:///test.db", echo=True)
 
 with Session(engine) as session:
     # First check if the ingredient has been already created in the Data Base
-    stmt = select(IngredientModel).where(IngredientModel.name.in_(["patata"]))
+    stmt = select(IngredientModel).where(IngredientModel.name.in_(["Patata"]))
     ingredient = session.scalars(stmt).one_or_none()
 
     # if it is not created we create the ingredient in the db.
@@ -28,7 +28,7 @@ with Session(engine) as session:
     
     # Create the recipe
     recipe = RecipeModel(
-        id = str(uuid.uuid4()),
+        uuid = str(uuid.uuid4()),
         name = "pataten ",
         description = "mejor que a bocados",
         steps = "claro",

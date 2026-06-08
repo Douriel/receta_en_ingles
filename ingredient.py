@@ -12,5 +12,5 @@ class IngredientDto(BaseModel):
     def from_model(ingredient_model:IngredientModel):
 
         return IngredientDto(uuid = ingredient_model.uuid, 
-                             name = str(ingredient_model.name), 
-                             quantity = int(ingredient_model.quantity))
+                             name = ingredient_model.name, 
+                             quantity = ingredient_model.quantity)

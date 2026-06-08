@@ -45,7 +45,7 @@ def update_item(item_id: int, item: Item):
 # Methods related with ingredients
 
 # Get a list of all the ingredients
-@app.get("/ingredients")
+@app.get("/ingredient")
 def get_ingredents():
     session = Session(engine)
 
@@ -58,7 +58,7 @@ def get_ingredents():
 
     return JSONResponse(content=jsonable_encoder(ingredient_list))
 
-@app.get("/ingredients/{ingredient_uuid}")
+@app.get("/ingredient/{ingredient_uuid}")
 def get_ingredient(ingredient_uuid):
     session = Session(engine)
 
@@ -119,5 +119,21 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
     return JSONResponse(status_code=200, content="Ingredient updated")
 
 
-## CRUD Recipe
+## CRUD methods related with Recipe
+
+
+# Get a list of the recipies 
+@app.get("/recipe")
+def get_recpies():
+    session = Session(engine)
+
+    stmt = select(RecipeModel)
+
+    recipe_list = []
+
+    for recipe_model in session.scalars(stmt):
+        recipe_list.append(RecipeModel.from_model(recipe_model))
+
+    return JSONResponse(content=jsonable_encoder(recipe_list))
+
 
