@@ -27,3 +27,26 @@ Related with Recipe:
 - Delete an Recipe.
 - Modify an Recipe.
 
+{
+  "uuid": "string",
+  "name": "Tabaco",
+  "description": "Merece la pena morir antes por una dosis? La respuesta es si",
+  "steps": "Necesiitas tabaco, unas buenas papelas, preferiblemente OCB, unos filtros o en su defecto un carton, tienes que poner en tu mano sucia el tabaco, repito sucia porque cuando te las acabas de lavar eso no rula bien, hces un cilindro con el tabaco y lo metes en el papel, despues lo prensas un poco hasta que tenga la forma e introduces en un extremo el filtro, por ultimo lo enrollas haciendo un pellizco en las uñas de los pulgares oponibles que tienes y chupas el pegamente (te acuerdas de la primaria?), Listo!!",
+  "ingredients": [
+    {
+      "uuid": "string",
+      "name": "tabaco",
+      "quantity": 20
+    },
+    {
+      "uuid": "string",
+      "name": "papel",
+      "quantity": 0
+    },
+    {
+      "uuid": "string",
+      "name": "filtro",
+      "quantity": 1
+    }
+  ]
+}

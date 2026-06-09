@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -65,7 +67,7 @@ def get_ingredient(ingredient_uuid):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
 
     if(stmt is None):
-        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+        return JSONResponse(status_code=400, content="Ingredient not found")
     
     return JSONResponse(content=jsonable_encoder(IngredientDto.from_model(stmt)))
 
@@ -78,7 +80,7 @@ def add_ingredient(ingredient:IngredientDto):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
 
     if(stmt is not None):
-        return JSONResponse(status_code=400, content="Ingredient already on data base")
+        return JSONResponse(status_code=400, content="Ingredient already exist")
     
     ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity)
 
@@ -95,7 +97,7 @@ def delete_ingredient(ingredient_uuid):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
     # if not found it cannot be deleted
     if(stmt is None):
-        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+        return JSONResponse(status_code=400, content="Ingredient not found")
     session.delete(stmt)
     session.commit()
 
@@ -110,7 +112,7 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
     # if not found the ingrediet cannot be updatad
     if(stmt is None):
-        return JSONResponse(status_code=400, content="Ingredient does not exist in data base")
+        return JSONResponse(status_code=400, content="Ingredient not found")
     
     stmt.name = ingredient.name
     stmt.quantity = ingredient.quantity
@@ -122,9 +124,9 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
 ## CRUD methods related with Recipe
 
 
-# Get a list of the recipies 
+# Get a list of the recipes 
 @app.get("/recipe")
-def get_recpies():
+def get_recipes():
     session = Session(engine)
 
     stmt = select(RecipeModel)
@@ -132,8 +134,54 @@ def get_recpies():
     recipe_list = []
 
     for recipe_model in session.scalars(stmt):
-        recipe_list.append(RecipeModel.from_model(recipe_model))
+        print(recipe_model)
+        recipe_list.append(RecipeDto.from_model(recipe_model))
 
     return JSONResponse(content=jsonable_encoder(recipe_list))
+
+
+# Get an specific recipe.
+@app.get("/recipe/{recipe_uuid}")
+def get_recipe(recipe_uuid):
+    session = Session(engine)
+
+    stmt = session.scalars(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid)).one_or_none()
+
+    #Check if it exist on the DB
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Recipe not found")
+    
+    return JSONResponse(content=jsonable_encoder(RecipeDto.from_model(stmt)))
+
+# Create a new recipe
+@app.post("/recipe")
+def create_recipe(recipe:RecipeDto):
+
+    session = Session(engine)
+    
+    # Check if the recipe already exist on the DB
+    stmt = session.scalars(select(RecipeModel).where(RecipeModel.name == recipe.name)).one_or_none()
+
+    if(stmt is not None):
+        return JSONResponse(status_code=400, content="The recipe already exist")
+    
+    ingredients_model:List[IngredientModel] = []
+  
+    for ingredient in recipe.ingredients:
+        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient.uuid)).one_or_none()
+
+        if(stmt2 is None):
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity))
+        else:
+            ingredients_model.append(stmt2)
+        
+
+    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model)
+
+    session.add(recipe_model)
+    session.commit()
+
+    return JSONResponse(content="Recipe created")
+
 
 

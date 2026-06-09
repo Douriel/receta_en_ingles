@@ -14,7 +14,7 @@ recipe_ingredient = Table(
     Column("recipe", ForeignKey("recipe.id"), primary_key=True),
 )
 
-
+######################### Porque tengo puestas las comillas dobles en las listas??????
 class IngredientModel(Base):
     __tablename__ = "ingredient"
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -36,7 +36,6 @@ class RecipeModel(Base):
     name : Mapped[str] = mapped_column(String(64), unique=True)
     description : Mapped[str] = mapped_column(Text(), default="")
     steps : Mapped[str] = mapped_column(Text(), default="")
-
     ingredients: Mapped[List["IngredientModel"]] = relationship(
         back_populates="recipes", cascade="all", secondary=recipe_ingredient
     )
