@@ -167,11 +167,11 @@ def create_recipe(recipe:RecipeDto):
     
     ingredients_model:List[IngredientModel] = []
   
-    for ingredient in recipe.ingredients:
-        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
+    for ingredient_dto in recipe.ingredients:
+        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
 
         if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity))
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity))
         else:
             ingredients_model.append(stmt2)
         
@@ -187,7 +187,7 @@ def create_recipe(recipe:RecipeDto):
 # Delete a recipe
 @app.delete("/recipe/{recipe_uuid}")
 def delete_recipe(recipe_uuid):
-    print("Deletion service is being executed")
+    print("Recipe deletion service is being executed")
     session = Session(engine)
 
     stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
@@ -201,3 +201,36 @@ def delete_recipe(recipe_uuid):
     return JSONResponse(content="Recipe deleted succesfully")
 
 
+# Update a recipe
+@app.put("/recipe/{recipe_uuid}")
+def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
+    print("Update recipe service is beign executed")
+    session = Session(engine)
+
+    stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Recipe not found")
+    
+    
+    stmt.name = recipe_dto.name
+    stmt.description = recipe_dto.description
+    stmt.steps = recipe_dto.steps
+    
+    ingredients_model:List[IngredientModel] = []
+    
+    for ingredient_dto in recipe_dto.ingredients:
+        stmt2 = session.scalar(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name))
+
+        if(stmt2 is None):
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity))
+        else:
+            ingredients_model.append(stmt2)
+
+    
+    stmt.ingredients = ingredients_model
+
+    session.commit()
+    return JSONResponse(status_code=200, content="Recipe updated")
+
+    
