@@ -156,7 +156,7 @@ def get_recipe(recipe_uuid):
 # Create a new recipe
 @app.post("/recipe")
 def create_recipe(recipe:RecipeDto):
-
+    print("Create service is being executed")
     session = Session(engine)
     
     # Check if the recipe already exist on the DB
@@ -168,7 +168,7 @@ def create_recipe(recipe:RecipeDto):
     ingredients_model:List[IngredientModel] = []
   
     for ingredient in recipe.ingredients:
-        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient.uuid)).one_or_none()
+        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
 
         if(stmt2 is None):
             ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity))
@@ -183,5 +183,21 @@ def create_recipe(recipe:RecipeDto):
 
     return JSONResponse(content="Recipe created")
 
+
+# Delete a recipe
+@app.delete("/recipe/{recipe_uuid}")
+def delete_recipe(recipe_uuid):
+    print("Deletion service is being executed")
+    session = Session(engine)
+
+    stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Recipe not found")
+    
+    session.delete(stmt)
+    session.commit()
+    
+    return JSONResponse(content="Recipe deleted succesfully")
 
 

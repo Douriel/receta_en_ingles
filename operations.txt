@@ -27,6 +27,15 @@ Related with Recipe:
 - Delete an Recipe.
 - Modify an Recipe.
 
+
+-------------------------
+
+- When deleting an ingredient we have to add a warning with the recipes that use this ingredient.
+
+
+-------------------------
+
+
 {
   "uuid": "string",
   "name": "Tabaco",

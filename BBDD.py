@@ -23,7 +23,7 @@ class IngredientModel(Base):
     quantity : Mapped[int] = mapped_column(default=0)
 
     recipes: Mapped[List["RecipeModel"]] = relationship(
-        back_populates="ingredients", cascade="all", secondary=recipe_ingredient
+        back_populates="ingredients", secondary=recipe_ingredient
     )
 
     def __repr__(self) -> str:
@@ -37,7 +37,7 @@ class RecipeModel(Base):
     description : Mapped[str] = mapped_column(Text(), default="")
     steps : Mapped[str] = mapped_column(Text(), default="")
     ingredients: Mapped[List["IngredientModel"]] = relationship(
-        back_populates="recipes", cascade="all", secondary=recipe_ingredient
+        back_populates="recipes", secondary=recipe_ingredient
     )
 
     def __repr__(self) -> str:
