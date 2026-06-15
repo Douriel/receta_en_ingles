@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-cookbook',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './cookbook.component.html',
   styleUrl: './cookbook.component.scss'
 })
