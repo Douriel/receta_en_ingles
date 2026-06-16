@@ -1,7 +1,20 @@
 <h1>Kitchen Management app</h1>
-<div>
-    <button routerLink="cookbook">Manage your Cookbook</button>
-</div>
-<div>
-    <button routerLink="storeroom">Manage your Storeroom</button>
+<div class="container">
+
+    <div class="card" style="width: 18rem;">
+        <img src="images/book.webp" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Cookbook</h5>
+            <p class="card-text">Create your own recipes, be creative!</p>
+            <a routerLink="cookbook" class="btn btn-primary">Manage your cookbook</a>
+        </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+        <img src="images/pantry.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Storeroom</h5>
+            <p class="card-text">Store all your ingredients to use them in your recipes and keep track of them.</p>
+            <a routerLink="storeroom" class="btn btn-primary">Manage your Storeroom</a>
+        </div>
+    </div>
 </div>
