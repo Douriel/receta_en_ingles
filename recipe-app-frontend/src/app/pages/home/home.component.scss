@@ -1,3 +1,15 @@
+.title-container{
+    display: flex;
+    
+    & img{
+        width: 60px;
+    }
+    & h1{
+        display: flex;
+        
+    }
+}
+
 .container{
     display: flex;
     justify-content: space-evenly;
@@ -7,12 +19,14 @@
 }
 
 :host{
+    background-color: #99d9ea;
+
     display: flex;
     flex-direction: column;
 }
 
 .card{
-    width: 18rem;
+    width: 16rem;
     height: 20rem;
 
     & img{
@@ -35,6 +49,9 @@
 }
 
 
+
+
+/* Medias */
 @media (max-width: 600px) {
     .container{
         flex-direction: column;
