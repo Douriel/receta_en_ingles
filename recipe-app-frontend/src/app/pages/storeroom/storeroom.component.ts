@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './storeroom.component.scss'
 })
 export class StoreroomComponent {
-
+  
 }

@@ -1,12 +1,16 @@
 .title-container{
     display: flex;
-    
+    background-color: #99d9ea;
+    margin-bottom: 2rem;
     & img{
-        width: 60px;
+        width: 50px;
+        margin-right: 2rem;
+        margin-bottom: 10px;
     }
     & h1{
         display: flex;
-        
+        flex-direction: column;
+        justify-content:center;
     }
 }
 
@@ -19,8 +23,8 @@
 }
 
 :host{
-    background-color: #99d9ea;
-
+    background-color: #000000be;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }

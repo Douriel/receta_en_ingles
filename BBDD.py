@@ -21,6 +21,8 @@ class IngredientModel(Base):
     uuid : Mapped[str] = mapped_column(String(36), index=True)
     name : Mapped[str] = mapped_column(String(64), unique=True)
     quantity : Mapped[int] = mapped_column(default=0)
+    unit : Mapped[str] = mapped_column(String(16))
+
 
     recipes: Mapped[List["RecipeModel"]] = relationship(
         back_populates="ingredients", secondary=recipe_ingredient

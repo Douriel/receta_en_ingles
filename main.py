@@ -25,24 +25,6 @@ engine = create_engine("sqlite:///test.db", echo=True)
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: bool | None = None
-
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
-
-
-
 
 # Methods related with ingredients
 
@@ -82,7 +64,7 @@ def add_ingredient(ingredient:IngredientDto):
     if(stmt is not None):
         return JSONResponse(status_code=400, content="Ingredient already exist")
     
-    ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity)
+    ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity, unit=ingredient.unit, notes= ingredient.notes)
 
     session.add(ingredient_model)
     session.commit()
@@ -116,6 +98,8 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
     
     stmt.name = ingredient.name
     stmt.quantity = ingredient.quantity
+    stmt.unit = ingredient.unit
+    stmt.notes = ingredient.notes
     
     session.commit()
     return JSONResponse(status_code=200, content="Ingredient updated")
@@ -171,7 +155,7 @@ def create_recipe(recipe:RecipeDto):
         stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
 
         if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity))
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
         else:
             ingredients_model.append(stmt2)
         
@@ -223,7 +207,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
         stmt2 = session.scalar(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name))
 
         if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity))
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
         else:
             ingredients_model.append(stmt2)
 
@@ -232,5 +216,3 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
 
     session.commit()
     return JSONResponse(status_code=200, content="Recipe updated")
-
-    
