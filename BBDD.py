@@ -22,7 +22,7 @@ class IngredientModel(Base):
     name : Mapped[str] = mapped_column(String(64), unique=True)
     quantity : Mapped[int] = mapped_column(default=0)
     unit : Mapped[str] = mapped_column(String(16))
-
+    notes : Mapped[str] = mapped_column(String(200))
 
     recipes: Mapped[List["RecipeModel"]] = relationship(
         back_populates="ingredients", secondary=recipe_ingredient

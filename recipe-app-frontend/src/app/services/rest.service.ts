@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IngredientDto } from '../data/ingredient.dto';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class RestService {
     constructor(private httpClient: HttpClient) { }
 
-    public getIngredients(){
-        this.httpClient.get<IngredientDto[]>('http://127.0.0.1:8000/ingredient').subscribe({
-            next: (list) => {console.log(list)}
-        });
+    public getIngredients(): Observable<IngredientDto[]> {
+        return this.httpClient.get<IngredientDto[]>('http://127.0.0.1:8000/ingredient');
     }
 
-    public getIngredient(){
-        this.httpClient.get<IngredientDto>('http://127.0.0.1:8000/ingredient/')
+    public postIngredient(newIngredient: IngredientDto){
+        this.httpClient.post<IngredientDto>('http://127.0.0.1:8000/ingredient', newIngredient)
     }
 }

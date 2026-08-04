@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IngredientDto } from '../../data/ingredient.dto';
 import { RestService } from '../../services/rest.service';
 
@@ -6,13 +6,22 @@ import { RestService } from '../../services/rest.service';
   selector: 'app-storeroom',
   imports: [],
   templateUrl: './storeroom.component.html',
-  styleUrl: './storeroom.component.scss'
+  styleUrls: ['./storeroom.component.scss']
 })
-export class StoreroomComponent {
+export class StoreroomComponent implements OnInit {
+
+  ingredientList: IngredientDto[] = [];
 
   constructor(private readonly restService: RestService) { }
   
-  protected retrieveList(){
-    this.restService.getIngredients()
+  ngOnInit(): void {
+    this.retrieveList();
+  }
+
+  protected retrieveList(): void {
+    this.restService.getIngredients().subscribe({
+      next: (list: IngredientDto[]) => this.ingredientList = list,
+      error: err => console.error('Failed to load ingredients', err)
+    });
   }
 }

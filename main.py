@@ -65,12 +65,12 @@ def get_ingredient(ingredient_uuid):
 
     
 # Create a new ingredient
-@app.post("/ingredient/")
+@app.post("/ingredient")
 def add_ingredient(ingredient:IngredientDto):
     session = Session(engine)
     # First thing is to check if this item is listed in the DB
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
-
+    print("this is fine")
     if(stmt is not None):
         return JSONResponse(status_code=400, content="Ingredient already exist")
     
