@@ -1,10 +1,37 @@
 <div class="modal-header">
-    <h4 class="modal-title">Hi there!</h4>
+    <h4 class="modal-title">{{ingNewTitle()}}</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
-<div class="modal-body">
-    <p>Hello!</p>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Close</button>
-</div>
+<form>
+    <div class="modal-body">
+        <div>
+            <label for="ingName">Name</label>
+            <input id="ingName" type="text" [formField]="ingForm.name">  
+        </div>
+        <div>
+            <label for="ingUnit">Unit</label>
+            <select id="ingUnit" [formField]="ingForm.unit">
+                <option value="Grams">Grams</option>
+                <option value="Kilograms">Kilograms</option>
+                <option value="Mililiters">Mililiters</option>
+                <option value="Liters">Liters</option>
+                <option value="Units">Units</option>
+                <option value="Docens">Docens</option>
+            </select>    
+        </div>
+        <div>
+            <label for="ingQuantity">Quantity</label>
+            <input id="ingQuantity" type="number" step="1" [formField]="ingForm.quantity">
+        </div>
+        <div class="notes-input">
+            <label for="ingNotes">Notes</label>
+            <textarea id="ingNotes" [formField]="ingForm.notes"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!--<button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>-->
+        <button type="button" class="btn btn-outline-danger" (click)="activeModal.dismiss()">Cancel</button>
+
+        <button type="button" class="btn btn-outline-primary" (click)="submitForm()">Save</button>
+    </div>
+</form>
