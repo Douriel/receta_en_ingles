@@ -12,6 +12,6 @@ export class RestService {
     }
 
     public postIngredient(newIngredient: IngredientDto){
-        this.httpClient.post<IngredientDto>('http://127.0.0.1:8000/ingredient', newIngredient)
+        return this.httpClient.post<any>('http://127.0.0.1:8000/ingredient', newIngredient)
     }
 }

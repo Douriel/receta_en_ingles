@@ -32,6 +32,16 @@ export class StoreroomComponent implements OnInit {
   }
 
   protected createIngredient(): void {
-    this.ngbModal.open(FormIngredientComponent);
+    const modalRef = this.ngbModal.open(FormIngredientComponent);
+    modalRef.closed.subscribe({
+      next: (ingDto: IngredientDto) => {
+        this.restService.postIngredient(ingDto).subscribe({
+          next: () => {
+            this.retrieveList();
+          },
+          error: err => console.error('Ingredient not created', err)
+        })
+      }
+    })
   }
 }
