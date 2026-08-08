@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IngredientDto } from '../../data/ingredient.dto';
 
@@ -29,7 +29,13 @@ export class FormIngredientComponent {
     notes: ""
   })
 
-  protected readonly ingForm = form(this.ingModel);
+  protected readonly ingForm = form(this.ingModel, (schemaPath) =>{
+    required(schemaPath.name);
+    maxLength(schemaPath.name, 64);
+    maxLength(schemaPath.unit, 16);
+    maxLength(schemaPath.notes, 200);
+    min(schemaPath.quantity, 0);
+  });
 
   protected readonly ingNewTitle = signal("Create a new ingredient")
 
@@ -38,8 +44,10 @@ export class FormIngredientComponent {
   }
 
   protected submitForm(){
-    const ingDto = new IngredientDto(this.ingModel());
-    this.activeModal.close(ingDto);
+    if(this.ingForm().valid()){
+      const ingDto = new IngredientDto(this.ingModel());
+      this.activeModal.close(ingDto);
+    }
   }
 
   public setIng(ingEdit: IngredientDto){

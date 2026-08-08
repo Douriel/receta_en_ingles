@@ -32,6 +32,6 @@
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
         <button type="button" class="btn btn-outline-danger" (click)="activeModal.dismiss()">Cancel</button>
 
-        <button type="button" class="btn btn-outline-primary" (click)="submitForm()">Save</button>
+        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!ingForm().valid()">Save</button>
     </div>
 </form>
