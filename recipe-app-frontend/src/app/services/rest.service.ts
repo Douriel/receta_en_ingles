@@ -12,6 +12,10 @@ export class RestService {
     }
 
     public postIngredient(newIngredient: IngredientDto){
-        return this.httpClient.post<any>('http://127.0.0.1:8000/ingredient', newIngredient)
+        return this.httpClient.post<any>('http://127.0.0.1:8000/ingredient', newIngredient);
+    }
+
+    public updateIngredient(updatedIngredient: IngredientDto){
+        return this.httpClient.put<any>(`http://127.0.0.1:8000/ingredient/${updatedIngredient.uuid}`, updatedIngredient);
     }
 }

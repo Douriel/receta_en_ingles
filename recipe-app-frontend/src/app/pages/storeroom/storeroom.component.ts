@@ -44,4 +44,20 @@ export class StoreroomComponent implements OnInit {
       }
     })
   }
+
+  protected editIngredient(ingEdit: IngredientDto): void{
+    const modalRef = this.ngbModal.open(FormIngredientComponent);
+    const modal: FormIngredientComponent = modalRef.componentInstance;
+    modal.setIng(ingEdit);
+     modalRef.closed.subscribe({
+      next: (ingDto: IngredientDto) => {
+        this.restService.updateIngredient(ingDto).subscribe({
+          next: () => {
+            this.retrieveList();
+          },
+          error: err => console.error('Ingredient not updated', err)
+        })
+      }
+    })
+  }
 }

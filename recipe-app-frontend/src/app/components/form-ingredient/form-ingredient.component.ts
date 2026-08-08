@@ -41,6 +41,10 @@ export class FormIngredientComponent {
     const ingDto = new IngredientDto(this.ingModel());
     this.activeModal.close(ingDto);
   }
+
+  public setIng(ingEdit: IngredientDto){
+    this.ingModel.set(ingEdit);
+  }
 }
 
 
