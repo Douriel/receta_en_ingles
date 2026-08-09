@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IngredientDto } from '../../data/ingredient.dto';
@@ -15,10 +15,11 @@ interface Formdata{
   selector: 'app-form-ingredient',
   imports: [FormField],
   templateUrl: './form-ingredient.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './form-ingredient.component.scss'
 })
 export class FormIngredientComponent {
+
+  protected editFlag = false;
 
   constructor(protected readonly activeModal:NgbActiveModal){}
 
@@ -37,7 +38,7 @@ export class FormIngredientComponent {
     min(schemaPath.quantity, 0);
   });
 
-  protected readonly ingNewTitle = signal("Create a new ingredient")
+  protected readonly modalTitle = signal("Create a new ingredient")
 
   protected debugging(){
     console.log(this.ingModel())
@@ -50,8 +51,15 @@ export class FormIngredientComponent {
     }
   }
 
+  protected deleteIng() {
+    const ingDto = new IngredientDto(this.ingModel());
+    this.activeModal.close(ingDto.uuid);
+  }
+
   public setIng(ingEdit: IngredientDto){
     this.ingModel.set(ingEdit);
+    this.editFlag = true;
+    this.modalTitle.set("Edit the ingredient");
   }
 }
 

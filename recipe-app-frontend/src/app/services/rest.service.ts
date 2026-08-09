@@ -18,4 +18,8 @@ export class RestService {
     public updateIngredient(updatedIngredient: IngredientDto){
         return this.httpClient.put<any>(`http://127.0.0.1:8000/ingredient/${updatedIngredient.uuid}`, updatedIngredient);
     }
+
+    public deleteIngredient(uuidIng: string){
+        return this.httpClient.delete<any>(`http://127.0.0.1:8000/ingredient/${uuidIng}`);
+    }
 }
