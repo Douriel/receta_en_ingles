@@ -1,12 +1,13 @@
-import { Component, OnInit, signal, Signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { IngredientDto } from '../../data/ingredient.dto';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { FormIngredientComponent } from '../../components/form-ingredient/form-ingredient.component';
+import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-storeroom',
-  imports: [],
+  imports: [NavBarComponent],
   templateUrl: './storeroom.component.html',
   styleUrls: ['./storeroom.component.scss']
 })
