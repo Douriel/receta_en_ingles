@@ -1,1 +1,21 @@
-<h1>it works</h1>
+<nav-bar/>
+<h1>Recipe Book</h1>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+ 			<th scope="col">Recipe name</th>
+			<th scope="col">Recipe short description</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (recipe of recipeBook(); track recipe.name; let i = $index) {
+			<tr> <!--(click)="editIngredient(ingredient)">-->
+				<!-- <th scope="row">{{ i + 1 }}</th> -->
+				<td> {{ recipe.name }} </td>
+				<td>{{ recipe.description }}</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<button (click)="createRecipe()" type="button">Add a recipe</button>
