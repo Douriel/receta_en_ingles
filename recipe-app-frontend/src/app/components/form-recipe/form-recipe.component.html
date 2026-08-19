@@ -1,1 +1,21 @@
-<p>form-recipe works!</p>
+<div class="modal-header">
+    <h4 class="modal-title">{{modalTitle()}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form>
+    <div class="modal-body">
+        <div>
+            <label for="recipeName">Name</label>
+            <input id="recipeName" type="text" [formField]="recipeForm.name">
+        </div>
+        <div>
+            <label for="recipeDescription">description</label>
+            <input id="recipeDescription" type="text" [formField]="recipeForm.description">
+        </div>
+        <div>
+            <label for="recipeSteps">Steps</label>
+            <input id="recipeSteps" type="text" [formField]="recipeForm.steps">
+        </div>
+        
+    </div>
+</form>
