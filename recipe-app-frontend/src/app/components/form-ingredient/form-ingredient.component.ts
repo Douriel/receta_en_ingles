@@ -28,7 +28,7 @@ export class FormIngredientComponent {
     quantity: 0,
     unit: "",
     notes: ""
-  })
+  });
 
   protected readonly ingForm = form(this.ingModel, (schemaPath) =>{
     required(schemaPath.name);
@@ -38,7 +38,7 @@ export class FormIngredientComponent {
     min(schemaPath.quantity, 0);
   });
 
-  protected readonly modalTitle = signal("Create a new ingredient")
+  protected readonly modalTitle = signal("Create a new ingredient");
 
   protected debugging(){
     console.log(this.ingModel())
