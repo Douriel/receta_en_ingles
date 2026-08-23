@@ -1,0 +1,7 @@
+Añadir el atributo de tiempo a las recetas
+Añadir tags a las recetas
+
+
+Buscador de recetas por ingredientes que lo lleven.
+
+Buscador de recetas por tags.

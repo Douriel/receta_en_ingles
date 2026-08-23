@@ -9,13 +9,27 @@
             <input id="recipeName" type="text" [formField]="recipeForm.name">
         </div>
         <div>
-            <label for="recipeDescription">description</label>
+            <label for="recipeDescription">Description</label>
             <input id="recipeDescription" type="text" [formField]="recipeForm.description">
         </div>
-        <div>
+        <div class="steps">
             <label for="recipeSteps">Steps</label>
-            <input id="recipeSteps" type="text" [formField]="recipeForm.steps">
+            <textarea id="recipeSteps" type="text" [formField]="recipeForm.steps"></textarea>
         </div>
+        <div>
+            <label for="recipeIng">List of ingredients:</label>
+        </div>
+        @for (ingredient of recipeForm.ingredients; track ingredient.uuid) {
+            <div>
+                <input id="recipeIng" type="text" [formField]="ingredient.name">
+            </div>
+        }
+        <div>
+            <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
+                <i class="bi bi-plus-lg"></i>
+            </button> 
+        </div>
+        
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>

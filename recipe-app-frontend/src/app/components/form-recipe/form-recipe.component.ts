@@ -58,4 +58,8 @@ export class FormRecipeComponent {
     this.recipeModel.set(recipeEdit);
     this.modalTitle.set("Edit the recipe");
   }
+
+  addIng() {
+    throw new Error('Method not implemented.');
+  }
 }

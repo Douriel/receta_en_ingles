@@ -1,0 +1,26 @@
+.modal-body{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.8rem;
+
+    >div{
+        display: flex;
+        >label{
+            min-width: 98px;
+        }
+        >input, >select, >textarea{
+            flex-grow: 1;
+        }
+        &.steps{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.modal-footer{
+    justify-content: space-between;
+    >button{
+        min-width: 76px;
+    }
+}
