@@ -16,6 +16,14 @@
             <label for="recipeSteps">Steps</label>
             <input id="recipeSteps" type="text" [formField]="recipeForm.steps">
         </div>
-        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
+    <!--
+        @if(editFlag){
+            <button type="button" class="btn btn-outline-danger" (click)="deleteIng()">Delete</button>
+        }
+        -->
+        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!recipeForm().valid()">Save</button>
     </div>
 </form>
