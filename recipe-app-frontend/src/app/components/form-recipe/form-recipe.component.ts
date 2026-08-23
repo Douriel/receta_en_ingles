@@ -43,14 +43,14 @@ export class FormRecipeComponent {
 
   protected submitForm(){
     if(this.recipeForm().valid()){
-      const recipeDto = new IngredientDto(this.recipeModel());
+      const recipeDto = new RecipeDto(this.recipeModel());
       this.activeModal.close(recipeDto);
     }
   }
 
   protected deleteRec() {
-    const ingDto = new IngredientDto(this.recipeModel());
-    this.activeModal.close(ingDto.uuid);
+    const recipeDto = new RecipeDto(this.recipeModel());
+    this.activeModal.close(recipeDto.uuid);
   }
 
   setRecipe(recipeEdit: RecipeDto) {
@@ -60,6 +60,7 @@ export class FormRecipeComponent {
   }
 
   addIng() {
-    throw new Error('Method not implemented.');
+    const ingDto = new IngredientDto();
+    this.recipeForm.ingredients().value.update(value => [...value, ingDto])
   }
 }
