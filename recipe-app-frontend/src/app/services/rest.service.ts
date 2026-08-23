@@ -32,8 +32,15 @@ export class RestService {
         return this.httpClient.get<RecipeDto[]>('http://127.0.0.1:8000/recipe');
     }
 
-    public postRecipe(recDto: RecipeDto) {
-      return this.httpClient.post<any>('http://127.0.0.1:8000/recipe', recDto)
+    public postRecipe(newRecipe: RecipeDto) {
+      return this.httpClient.post<any>('http://127.0.0.1:8000/recipe', newRecipe)
     }
 
+    public updateRecipe(updatedRecipe: RecipeDto){
+        return this.httpClient.put<any>(`http://127.0.0.1:8000/recipe/${updatedRecipe.uuid}`, updatedRecipe);
+    }
+
+    public deleteRecipe(deletedRecipeUUID: string){
+        return this.httpClient.delete<any>(`http://127.0.0.1:8000/recipe/${deletedRecipeUUID}`)
+    }
 }

@@ -47,7 +47,6 @@ export class StoreroomComponent implements OnInit {
   }
 
   protected editIngredient(ingEdit: IngredientDto): void{
-    const editFlag = true;
     const modalRef = this.ngbModal.open(FormIngredientComponent);
     const modal: FormIngredientComponent = modalRef.componentInstance;
     modal.setIng(ingEdit);

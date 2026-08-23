@@ -48,6 +48,14 @@ export class FormRecipeComponent {
     }
   }
 
-  
+  protected deleteRec() {
+    const ingDto = new IngredientDto(this.recipeModel());
+    this.activeModal.close(ingDto.uuid);
+  }
 
+  setRecipe(recipeEdit: RecipeDto) {
+    this.editFlag = true;
+    this.recipeModel.set(recipeEdit);
+    this.modalTitle.set("Edit the recipe");
+  }
 }

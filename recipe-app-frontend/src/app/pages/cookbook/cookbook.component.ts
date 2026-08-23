@@ -23,10 +23,10 @@ export class CookbookComponent implements OnInit{
     {}
 
   ngOnInit(): void {
-    this.recipeList();
+    this.retriveRecipeList();
   }
   
-  protected recipeList(): void{
+  protected retriveRecipeList(): void{
     this.restService.getRecipes().subscribe({
       next: (list: RecipeDto[]) => this.recipeBook.set(list),
       error: err => console.error('Failed to load recipes', err)
@@ -39,9 +39,36 @@ export class CookbookComponent implements OnInit{
       next: (recDto : RecipeDto) => {
         this.restService.postRecipe(recDto).subscribe({
           next: () => {
-            this.recipeList();
-          }
+            this.retriveRecipeList();
+          },
+          error: err => console.error('Recipe could not be created', err)
         })
+      }
+    })
+  }
+
+  protected editRecipe(recipeEdit: RecipeDto): void{
+    const modalRef = this.ngbModal.open(FormRecipeComponent);
+    const modal: FormRecipeComponent = modalRef.componentInstance;
+    modal.setRecipe(recipeEdit);
+
+    modalRef.closed.subscribe({
+      next: (result: RecipeDto | string) => {
+        if(typeof result === "string"){
+          this.restService.deleteRecipe(result).subscribe({
+            next: () => {
+              this.retriveRecipeList();
+            },
+            error: err => console.error('Recipe could not be deleted', err)
+          })
+        } else{
+          this.restService.updateRecipe(result).subscribe({
+            next: () => {
+              this.retriveRecipeList();
+            },
+            error: err => console.error('Recipe could not be updated', err)
+          })
+        }
       }
     })
   }

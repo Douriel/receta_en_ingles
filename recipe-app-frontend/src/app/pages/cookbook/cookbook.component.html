@@ -10,7 +10,7 @@
 	</thead>
 	<tbody>
 		@for (recipe of recipeBook(); track recipe.name; let i = $index) {
-			<tr> <!--(click)="editIngredient(ingredient)">-->
+			<tr (click)="editRecipe(recipe)">
 				<!-- <th scope="row">{{ i + 1 }}</th> -->
 				<td> {{ recipe.name }} </td>
 				<td>{{ recipe.description }}</td>

@@ -57,8 +57,8 @@ export class FormIngredientComponent {
   }
 
   public setIng(ingEdit: IngredientDto){
-    this.ingModel.set(ingEdit);
     this.editFlag = true;
+    this.ingModel.set(ingEdit);
     this.modalTitle.set("Edit the ingredient");
   }
 }
