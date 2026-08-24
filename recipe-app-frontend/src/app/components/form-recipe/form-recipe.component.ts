@@ -44,6 +44,14 @@ export class FormRecipeComponent {
   protected submitForm(){
     if(this.recipeForm().valid()){
       const recipeDto = new RecipeDto(this.recipeModel());
+      let flag = true;
+      do{
+        if(recipeDto.ingredients[recipeDto.ingredients.length -1].name == ""){
+          this.recipeForm.ingredients().value().pop();
+        } else{
+          flag =false;
+        }
+      } while(flag);
       this.activeModal.close(recipeDto);
     }
   }
@@ -61,6 +69,15 @@ export class FormRecipeComponent {
 
   addIng() {
     const ingDto = new IngredientDto();
-    this.recipeForm.ingredients().value.update(value => [...value, ingDto])
+    this.recipeForm.ingredients().value.update(value => [...value, ingDto]);
   }
+
+  deleteLastRow() {
+    this.recipeForm.ingredients().value().pop();
+    //const test = this.recipeForm.ingredients().value().pop();
+    //const found = test.find(ing => ing.name == "")
+
+    //console.log(found);
+  }
+
 }
