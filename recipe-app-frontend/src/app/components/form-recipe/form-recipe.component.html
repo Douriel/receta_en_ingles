@@ -19,18 +19,24 @@
         <div>
             <label for="recipeIng">List of ingredients:</label>
         </div>
-        @for (ingredient of recipeForm.ingredients; track ingredient.uuid) {
+        @for (ingredient of recipeForm.ingredients; track ingredient) {
             <div>
-                <input id="recipeIng" type="text" [formField]="ingredient.name">
+                <input id="recipeIng"  type="text" [formField]="ingredient.name">
+                <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
+                <i class="bi bi-dash"></i>
+            </button> 
             </div>
         }
         <div>
             <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
                 <i class="bi bi-plus-lg"></i>
             </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="deleteLastRow()">
+            <!--<button type="button" class="btn btn-outline-secondary" (click)="deleteLastRow()">
                 <i class="bi bi-dash"></i>
-            </button> 
+
+                El input definitivo
+            (input)="ingredient.name().value.set($event.target.value)"
+            </button> -->
         </div>
         
     </div>

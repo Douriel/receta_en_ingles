@@ -3,6 +3,7 @@ import { applyEach, form, FormField, maxLength, min, required, SchemaPathTree } 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RecipeDto } from '../../data/recipe.dto';
 import { IngredientDto } from '../../data/ingredient.dto';
+import { filter } from 'rxjs';
 
 interface Formdata{
   name: string;
@@ -78,4 +79,7 @@ export class FormRecipeComponent {
     //console.log(found);
   }
 
+  deleteRow(index: number) {
+    this.recipeForm.ingredients().value.update(value => value.filter((value, i) => i != index));
+  }
 }
