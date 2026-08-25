@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
+import { applyEach, form, FormField, maxLength, min, required, SchemaPathTree } from '@angular/forms/signals';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RecipeDto } from '../../data/recipe.dto';
 import { IngredientDto } from '../../data/ingredient.dto';
@@ -9,6 +9,10 @@ interface Formdata{
   description: string;
   steps: string;
   ingredients: IngredientDto[];
+}
+
+function ItemSchema(ing: SchemaPathTree<IngredientDto>) {
+  required(ing.name, {message: 'Item name is required'});
 }
 
 @Component({
@@ -33,6 +37,8 @@ export class FormRecipeComponent {
   protected readonly recipeForm = form(this.recipeModel, (schemaPath) =>{
     required(schemaPath.name);
     maxLength(schemaPath.name, 64);
+
+    applyEach(schemaPath.ingredients, ItemSchema);
   });
 
   protected readonly modalTitle = signal("Write a new recipe");
@@ -44,14 +50,6 @@ export class FormRecipeComponent {
   protected submitForm(){
     if(this.recipeForm().valid()){
       const recipeDto = new RecipeDto(this.recipeModel());
-      let flag = true;
-      do{
-        if(recipeDto.ingredients[recipeDto.ingredients.length -1].name == ""){
-          this.recipeForm.ingredients().value().pop();
-        } else{
-          flag =false;
-        }
-      } while(flag);
       this.activeModal.close(recipeDto);
     }
   }
