@@ -52,6 +52,20 @@ def get_ingredents():
 
     return JSONResponse(content=jsonable_encoder(ingredient_list))
 
+@app.get("/ingredient/names")
+def get_ingredients_names():
+    session = Session(engine)
+
+    ingredients_names = []
+
+    stmt = session.scalars(select(IngredientModel.name))
+    
+    for name in stmt:
+        ingredients_names.append(name)
+
+    return JSONResponse(content=jsonable_encoder(ingredients_names))
+    
+
 @app.get("/ingredient/{ingredient_uuid}")
 def get_ingredient(ingredient_uuid):
     session = Session(engine)

@@ -13,7 +13,6 @@ import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 })
 export class StoreroomComponent implements OnInit {
 
-  //ingredientList: IngredientDto[] = [];
   ingredientList = signal<IngredientDto[]>([])
 
   constructor(

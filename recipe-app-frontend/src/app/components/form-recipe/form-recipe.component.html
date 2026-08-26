@@ -21,7 +21,7 @@
         </div>
         @for (ingredient of recipeForm.ingredients; track ingredient) {
             <div>
-                <input id="recipeIng"  type="text" [formField]="ingredient.name">
+                <input id="recipeIng"  type="text" [formField]="ingredient.name" [ngbTypeahead]="search">
                 <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
                 <i class="bi bi-dash"></i>
             </button> 
