@@ -5,3 +5,9 @@ Añadir tags a las recetas
 Buscador de recetas por ingredientes que lo lleven.
 
 Buscador de recetas por tags.
+
+Buscador de ingredientes
+
+Lista de compra
+
+validador de nombre (Si ya esta en la lista no se pueda llenar).

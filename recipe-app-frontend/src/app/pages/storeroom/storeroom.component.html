@@ -1,26 +1,35 @@
 <nav-bar/>
-<h1>Pantry</h1>
+<div class="p-4">
+	<div class="title-search">
+		<h1>Pantry</h1>
+		<div class="input-group">
+			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span> 
+			<input type="text" class="form-control" placeholder="Search for ingredient">
+		</div>
+		
+	</div>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
- 			<th scope="col">Ingredient name</th>
-			<th scope="col">Quantity</th>
-			<th scope="col">Unit</th>
-			<th scope="col">Notes</th>
-		</tr>
-	</thead>
-	<tbody>
-		@for (ingredient of ingredientList(); track ingredient.name; let i = $index) {
-			<tr (click)="editIngredient(ingredient)">
-				<!-- <th scope="row">{{ i + 1 }}</th> -->
-				<td> {{ ingredient.name }} </td>
-				<td>{{ ingredient.quantity }}</td>
-				<td>{{ ingredient.unit }}</td>
-				<td>{{ ingredient.notes }}</td>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Ingredient name</th>
+				<th scope="col">Quantity</th>
+				<th scope="col">Unit</th>
+				<th scope="col">Notes</th>
 			</tr>
-		}
-	</tbody>
-</table>
-<button (click)="createIngredient()" type="button">Add an ingredient</button>
+		</thead>
+		<tbody>
+			@for (ingredient of ingredientList(); track ingredient.name; let i = $index) {
+				<tr (click)="editIngredient(ingredient)">
+					<!-- <th scope="row">{{ i + 1 }}</th> -->
+					<td> {{ ingredient.name }} </td>
+					<td>{{ ingredient.quantity }}</td>
+					<td>{{ ingredient.unit }}</td>
+					<td>{{ ingredient.notes }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<button (click)="createIngredient()" type="button">Add an ingredient</button>
+</div>
 

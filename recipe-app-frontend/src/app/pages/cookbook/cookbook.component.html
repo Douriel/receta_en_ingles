@@ -1,21 +1,29 @@
 <nav-bar/>
-<h1>Recipe Book</h1>
+<div class="p-4">
+	<div class="title-search">
+		<h1>Recipe Book</h1>
+		<div class="input-group">
+			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span> 
+			<input type="text" class="form-control" placeholder="Search for recipes">
+		</div>
+	</div>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
- 			<th scope="col">Recipe name</th>
-			<th scope="col">Recipe short description</th>
-		</tr>
-	</thead>
-	<tbody>
-		@for (recipe of recipeBook(); track recipe.name; let i = $index) {
-			<tr (click)="editRecipe(recipe)">
-				<!-- <th scope="row">{{ i + 1 }}</th> -->
-				<td> {{ recipe.name }} </td>
-				<td>{{ recipe.description }}</td>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Recipe name</th>
+				<th scope="col">Recipe short description</th>
 			</tr>
-		}
-	</tbody>
-</table>
-<button (click)="createRecipe()" type="button">Add a recipe</button>
+		</thead>
+		<tbody>
+			@for (recipe of recipeBook(); track recipe.name; let i = $index) {
+				<tr (click)="editRecipe(recipe)">
+					<!-- <th scope="row">{{ i + 1 }}</th> -->
+					<td> {{ recipe.name }} </td>
+					<td>{{ recipe.description }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<button (click)="createRecipe()" type="button">Add a recipe</button>
+</div>
