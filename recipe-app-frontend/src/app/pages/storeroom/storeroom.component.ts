@@ -14,6 +14,8 @@ import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 export class StoreroomComponent implements OnInit {
 
   ingredientList = signal<IngredientDto[]>([])
+  ingredientListAux = signal<IngredientDto[]>([])
+
 
   constructor(
     private readonly restService: RestService,
@@ -26,7 +28,10 @@ export class StoreroomComponent implements OnInit {
 
   protected retrieveList(): void {
     this.restService.getIngredients().subscribe({
-      next: (list: IngredientDto[]) => this.ingredientList.set(list),
+      next: (list: IngredientDto[]) => {
+        this.ingredientList.set(list);
+        this.ingredientListAux.set(list);
+      },
       error: err => console.error('Failed to load ingredients', err)
     });
   }
@@ -69,5 +74,11 @@ export class StoreroomComponent implements OnInit {
         }
       }
     })
+  }
+
+  protected searchElement(element: string): void {
+    this.ingredientListAux.set(this.ingredientList().filter(ing => {
+      return ing.name.toLowerCase().includes(element.toLowerCase());
+    })); 
   }
 }

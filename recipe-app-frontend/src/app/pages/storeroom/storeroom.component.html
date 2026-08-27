@@ -4,7 +4,7 @@
 		<h1>Pantry</h1>
 		<div class="input-group">
 			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span> 
-			<input type="text" class="form-control" placeholder="Search for ingredient">
+			<input type="text" class="form-control" placeholder="Search for ingredient" (input)="searchElement($event.target.value)">
 		</div>
 		
 	</div>
@@ -19,7 +19,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for (ingredient of ingredientList(); track ingredient.name; let i = $index) {
+			@for (ingredient of ingredientListAux(); track ingredient.name; let i = $index) {
 				<tr (click)="editIngredient(ingredient)">
 					<!-- <th scope="row">{{ i + 1 }}</th> -->
 					<td> {{ ingredient.name }} </td>

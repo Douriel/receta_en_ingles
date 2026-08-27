@@ -16,6 +16,8 @@ import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.co
 export class CookbookComponent implements OnInit{
 
   recipeBook = signal<RecipeDto[]>([]);
+  recipeBookAux = signal<RecipeDto[]>([]);
+
 
   constructor (
     private readonly restService: RestService,
@@ -28,7 +30,10 @@ export class CookbookComponent implements OnInit{
   
   protected retriveRecipeList(): void{
     this.restService.getRecipes().subscribe({
-      next: (list: RecipeDto[]) => this.recipeBook.set(list),
+      next: (list: RecipeDto[]) => {
+        this.recipeBook.set(list);
+        this.recipeBookAux.set(list);
+      },
       error: err => console.error('Failed to load recipes', err)
     })
   }
@@ -71,5 +76,11 @@ export class CookbookComponent implements OnInit{
         }
       }
     })
+  }
+
+  protected searchElement(element: string): void {
+    this.recipeBookAux.set(this.recipeBook().filter(recipe => {
+      return recipe.name.toLowerCase().includes(element.toLowerCase());
+    })); 
   }
 }
