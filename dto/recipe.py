@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from uuid import UUID
 
 from BBDD import RecipeModel
-from ingredient import IngredientDto
+from dto.ingredient import IngredientDto
 
 
 class RecipeDto(BaseModel):

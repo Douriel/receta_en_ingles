@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from pydantic import BaseModel
-from recipe import RecipeDto
-from ingredient import IngredientDto
+from dto.recipe import RecipeDto
+from dto.ingredient import IngredientDto
 
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
