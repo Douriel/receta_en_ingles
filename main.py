@@ -210,7 +210,6 @@ def delete_recipe(recipe_uuid):
 # Update a recipe
 @app.put("/recipe/{recipe_uuid}")
 def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
-    print("Update recipe service is beign executed")
     session = Session(engine)
 
     stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
@@ -244,24 +243,24 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
 
 # Create a new shopping list
 @app.get("/shoppingList")
-def get_shoppingLists():
+def get_shopping_lists():
     session = Session(engine)
 
     stmt = select(ShoppingListModel)
 
-    shoppingList_list = []
+    shopping_list_list = []
 
-    for shoppingList in session.scalars(stmt):
-        shoppingList_list.append(ShoppingListDto.from_model(shoppingList))
+    for shopping_list in session.scalars(stmt):
+        shopping_list_list.append(ShoppingListDto.from_model(shopping_list))
 
-    return JSONResponse(content=jsonable_encoder(shoppingList_list))
+    return JSONResponse(content=jsonable_encoder(shopping_list_list))
 
 # Get an specific shopping list
-@app.get("/shoppingList/{uuid}")
-def get_shoppingList(shoppingList_uuid):
+@app.get("/shoppingList/{shopping_list_uuid}")
+def get_shopping_list(shopping_list_uuid):
     session = Session(engine)
 
-    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.uuid == shoppingList_uuid)).one_or_none()
+    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid)).one_or_none()
 
     if(stmt is None):
         return JSONResponse(status_code=400, content="Shopping List not found")
@@ -270,17 +269,17 @@ def get_shoppingList(shoppingList_uuid):
 
 # Create a new shopping list
 @app.post("/shoppingList")
-def create_shoppingList(shoppingList:ShoppingListDto):
+def create_shopping_list(shopping_list:ShoppingListDto):
     session = Session(engine)
 
-    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shoppingList.name)).one_or_none()
+    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shopping_list.name)).one_or_none()
 
     if(stmt is not None):
         return JSONResponse(status_code=400, content="There is shopping list with the same name")
 
     ingredients_model:List[IngredientModel] = []
 
-    for ingredient_dto in shoppingList.ingredients:
+    for ingredient_dto in shopping_list.ingredients:
         stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
 
         if(stmt2 is None):
@@ -288,13 +287,55 @@ def create_shoppingList(shoppingList:ShoppingListDto):
         else:
             ingredients_model.append(stmt2)
 
-    shoppingListModel = ShoppingListModel(uuid=str(uuid4()), name=shoppingList.name, quantity=shoppingList.quantity, unit=shoppingList.unit, notes=shoppingList.notes, ingredients=ingredients_model)
+    shopping_list_model = ShoppingListModel(uuid=str(uuid4()), name=shopping_list.name, quantity=shopping_list.quantity, unit=shopping_list.unit, notes=shopping_list.notes, ingredients=ingredients_model)
 
-    session.add(shoppingListModel)
+    session.add(shopping_list_model)
     session.commit()
 
     return JSONResponse(status_code=200, content="Shopping List created")
 
 # Delete a shopping List
+@app.delete("/shoppingList/{shopping_list_uuid}")
+def delete_shopping_list(shopping_list_uuid):
+    session = Session(engine)
 
-        
+    stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Recipe not found")
+    
+    session.delete(stmt)
+    session.commit()
+    
+    return JSONResponse(status_code=200, content="Shopping list deleted succesfully")
+
+# Update a shopping list
+@app.put("/shoppingList/{shopping_list_uuid}")
+def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
+    session = Session(engine)
+
+    stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Recipe not found")
+    
+    stmt.name = shopping_list_dto.name
+    stmt.notes = shopping_list_dto.notes
+    stmt.quantity = shopping_list_dto.quantity
+    stmt.unit = shopping_list_dto.unit
+
+    ingredients_model:List[IngredientModel] = []
+
+
+    for ingredient_dto in shopping_list_dto.ingredients:
+            stmt2 = session.scalar(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name))
+    
+            if(stmt2 is None):
+                ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
+            else:
+                ingredients_model.append(stmt2)
+
+    stmt.ingredients = ingredients_model
+    
+    session.commit()
+    return JSONResponse(status_code=200, content="Recipe updated")
