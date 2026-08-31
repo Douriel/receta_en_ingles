@@ -1,5 +1,6 @@
 from typing import List
 
+from dto.shopping_list import ShoppingListDto
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -12,7 +13,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
 
 
-from BBDD import IngredientModel, RecipeModel 
+from BBDD import IngredientModel, RecipeModel, ShoppingListModel 
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
@@ -142,7 +143,6 @@ def get_recipes():
     recipe_list = []
 
     for recipe_model in session.scalars(stmt):
-        print(recipe_model)
         recipe_list.append(RecipeDto.from_model(recipe_model))
 
     return JSONResponse(content=jsonable_encoder(recipe_list))
@@ -164,7 +164,6 @@ def get_recipe(recipe_uuid):
 # Create a new recipe
 @app.post("/recipe")
 def create_recipe(recipe:RecipeDto):
-    print("Create service is being executed")
     session = Session(engine)
     
     # Check if the recipe already exist on the DB
@@ -195,7 +194,6 @@ def create_recipe(recipe:RecipeDto):
 # Delete a recipe
 @app.delete("/recipe/{recipe_uuid}")
 def delete_recipe(recipe_uuid):
-    print("Recipe deletion service is being executed")
     session = Session(engine)
 
     stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
@@ -240,3 +238,63 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
 
     session.commit()
     return JSONResponse(status_code=200, content="Recipe updated")
+
+
+## CRUD methods related with shoppingList
+
+# Create a new shopping list
+@app.get("/shoppingList")
+def get_shoppingLists():
+    session = Session(engine)
+
+    stmt = select(ShoppingListModel)
+
+    shoppingList_list = []
+
+    for shoppingList in session.scalars(stmt):
+        shoppingList_list.append(ShoppingListDto.from_model(shoppingList))
+
+    return JSONResponse(content=jsonable_encoder(shoppingList_list))
+
+# Get an specific shopping list
+@app.get("/shoppingList/{uuid}")
+def get_shoppingList(shoppingList_uuid):
+    session = Session(engine)
+
+    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.uuid == shoppingList_uuid)).one_or_none()
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Shopping List not found")
+
+    return JSONResponse(content=jsonable_encoder(ShoppingListDto.from_model(stmt)))
+
+# Create a new shopping list
+@app.post("/shoppingList")
+def create_shoppingList(shoppingList:ShoppingListDto):
+    session = Session(engine)
+
+    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shoppingList.name)).one_or_none()
+
+    if(stmt is not None):
+        return JSONResponse(status_code=400, content="There is shopping list with the same name")
+
+    ingredients_model:List[IngredientModel] = []
+
+    for ingredient_dto in shoppingList.ingredients:
+        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
+
+        if(stmt2 is None):
+            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
+        else:
+            ingredients_model.append(stmt2)
+
+    shoppingListModel = ShoppingListModel(uuid=str(uuid4()), name=shoppingList.name, quantity=shoppingList.quantity, unit=shoppingList.unit, notes=shoppingList.notes, ingredients=ingredients_model)
+
+    session.add(shoppingListModel)
+    session.commit()
+
+    return JSONResponse(status_code=200, content="Shopping List created")
+
+# Delete a shopping List
+
+        

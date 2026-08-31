@@ -4,7 +4,7 @@ from dto.ingredient import IngredientDto
 from pydantic import BaseModel
 from uuid import UUID
 
-from BBDD import IngredientModel
+from BBDD import IngredientModel, ShoppingListModel
 
 class ShoppingListDto(BaseModel):
     uuid: str
@@ -15,10 +15,10 @@ class ShoppingListDto(BaseModel):
     notes: str
     
     @staticmethod
-    def from_model(ingredient_model:IngredientModel):
-
-        return ShoppingListDto(uuid = ingredient_model.uuid, 
-                             name = ingredient_model.name, 
-                             quantity = ingredient_model.quantity,
-                             unit= ingredient_model.unit,
-                             notes= ingredient_model.notes)
+    def from_model(shoppingList_model:ShoppingListModel):
+        return ShoppingListDto(uuid = shoppingList_model.uuid, 
+                            name = shoppingList_model.name,
+                            quantity = shoppingList_model.quantity,
+                            unit= shoppingList_model.unit,
+                            notes= shoppingList_model.notes,
+                            ingredients = [IngredientDto.from_model(ingredient) for ingredient in shoppingList_model.ingredients])
