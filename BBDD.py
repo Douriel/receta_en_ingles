@@ -21,6 +21,7 @@ recipe_tag = Table(
     Column("recipe", ForeignKey("recipe.id"), primary_key=True),
 )
 
+
 shoppingList_ingredient = Table(
     "shoppingList_ingredient",
     Base.metadata,
@@ -28,26 +29,64 @@ shoppingList_ingredient = Table(
     Column("ingredient", ForeignKey("ingredient.id"), primary_key=True),
 )
 
-######################### Por que tengo puestas las comillas dobles en las listas??????
+"""
+
+
+""" 
+class IngredientShoppingList(Base):
+    __tablename__ = "ingredient_shopping_list"
+    ing_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id"), primary_key=True)
+    shop_ls_id: Mapped[int] = mapped_column(ForeignKey("shoppingList.id"), primary_key=True)
+    
+    quantity: Mapped[int] = mapped_column(default=0)
+    unit: Mapped[str] = mapped_column(String(16))
+    notes: Mapped[str] = mapped_column(String(200))
+    
+    # Respondiendo a tu nota: No necesitas meter el nombre del ingrediente aquí.
+    # Podrás acceder a él a través de la relación (ej. association.ingredient.name).
+
+    # 1. Relationships pointing to the parent models
+    ingredient: Mapped["IngredientModel"] = relationship(back_populates="shopping_list_associations")
+    shopping_list: Mapped["ShoppingListModel"] = relationship(back_populates="ingredient_associations")
+
+
 class IngredientModel(Base):
     __tablename__ = "ingredient"
-    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uuid : Mapped[str] = mapped_column(String(36), index=True)
-    name : Mapped[str] = mapped_column(String(64), unique=True)
-    quantity : Mapped[int] = mapped_column(default=0)
-    unit : Mapped[str] = mapped_column(String(16))
-    notes : Mapped[str] = mapped_column(String(200))
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uuid: Mapped[str] = mapped_column(String(36), index=True)
+    name: Mapped[str] = mapped_column(String(64), unique=True)
+    notes: Mapped[str] = mapped_column(String(200))
 
-    recipes: Mapped[List["RecipeModel"]] = relationship(
-        back_populates="ingredients", secondary=recipe_ingredient
-    )
-    shoppingLists: Mapped[List["ShoppingListModel"]] = relationship(
-        secondary=shoppingList_ingredient, back_populates="ingredients"
+    # Keep your recipe relationship as it was if it doesn't have extra columns
+    # recipes: Mapped[List["RecipeModel"]] = relationship(...)
+    
+    # 2. Point to the Association object instead of using 'secondary='
+    shopping_list_associations: Mapped[List["IngredientShoppingList"]] = relationship(
+        back_populates="ingredient"
     )
 
     def __repr__(self) -> str:
-        return f"id(id={self.id!r}, name={self.name!r}, quantity={self.quantity!r})"
+        # Note: Removed 'quantity' from here, as it now lives on the association object
+        return f"IngredientModel(id={self.id!r}, name={self.name!r})"
+
+
+class ShoppingListModel(Base):
+    __tablename__ = "shoppingList"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uuid: Mapped[str] = mapped_column(String(36), index=True)
+    name: Mapped[str] = mapped_column(String(64), unique=True)
+    notes: Mapped[str] = mapped_column(String(200))
     
+    # 3. Point to the Association object instead of using 'secondary='
+    ingredient_associations: Mapped[List["IngredientShoppingList"]] = relationship(
+        back_populates="shopping_list"
+    )
+
+    def __repr__(self) -> str:
+        # Note: Removed 'quantity', 'unit', and 'ingredients' to prevent circular/missing attribute errors
+        return f"ShoppingListModel(id={self.id!r}, name={self.name!r})"
+
+        
 class RecipeModel(Base):
     __tablename__ = "recipe"
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -65,20 +104,7 @@ class RecipeModel(Base):
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r}, description={self.description!r}, steps={self.steps!r}, ingredients={self.ingredients!r})"
 
-class ShoppingListModel(Base):
-    __tablename__ = "shoppingList"
-    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uuid : Mapped[str] = mapped_column(String(36), index=True)
-    name : Mapped[str] = mapped_column(String(64), unique=True)
-    quantity : Mapped[int] = mapped_column(default=0)
-    unit : Mapped[str] = mapped_column(String(16))
-    notes : Mapped[str] = mapped_column(String(200))
-    ingredients: Mapped[List["IngredientModel"]] = relationship(
-        back_populates="shoppingLists", secondary=shoppingList_ingredient
-    )
 
-    def __repr__(self) -> str:
-        return f"id(id={self.id!r}, name={self.name!r}, quantity={self.quantity!r}, unit={self.unit!r}, notes={self.notes!r}, ingredients={self.ingredients!r})"
 
 
 class TagModel(Base):
