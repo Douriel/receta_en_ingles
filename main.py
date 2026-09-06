@@ -290,7 +290,9 @@ def create_shopping_list(shopping_list:ShoppingListDto):
                     quantity=0, 
                     unit=ingredient_dto.unit, 
                     notes=ingredient_dto.notes                    
-                )
+            )
+            else: 
+                ingredient_dto.unit= ingredient.unit
 
             assoc = IngredientShoppingListModel(
                 ingredient=ingredient,
