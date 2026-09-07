@@ -53,7 +53,7 @@ class IngredientModel(Base):
     )
     
     shopping_list_associations: Mapped[List["IngredientShoppingListModel"]] = relationship(
-        back_populates="ingredient"
+        back_populates="ingredient", cascade="all, delete"
     )
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r}, quantity={self.quantity!r})"

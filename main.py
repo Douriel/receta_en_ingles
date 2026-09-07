@@ -285,7 +285,7 @@ def create_shopping_list(shopping_list:ShoppingListDto):
 
             if(ingredient is None):
                 ingredient = IngredientModel(
-                    uuid=str(uuid4),
+                    uuid=str(uuid4()),
                     name=ingredient_dto.name, 
                     quantity=0, 
                     unit=ingredient_dto.unit, 
