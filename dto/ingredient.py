@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 from uuid import UUID
 
-from BBDD import IngredientModel
+from bbdd_v2 import IngredientModel
 
 class IngredientDto(BaseModel):
     uuid: str
