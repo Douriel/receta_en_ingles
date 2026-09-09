@@ -9,11 +9,11 @@ from bbdd_v2 import IngredientModel, ShoppingListModel, IngredientShoppingListMo
 class Ingredient_shopping_list_dto(BaseModel):
     unit: str
     quantity: int
-    ingredient : list[IngredientDto]
+    ingredient : IngredientDto
 
     @staticmethod
     def from_model(ingredientShoppingListModel:IngredientShoppingListModel):
         return Ingredient_shopping_list_dto(
                                             unit = ingredientShoppingListModel.unit,
                                             quantity = ingredientShoppingListModel.quantity,
-                                            ingredient = [IngredientDto.from_model(ingredient) for ingredient in ingredientShoppingListModel.ingredient])
+                                            ingredient = IngredientDto.from_model(ingredientShoppingListModel.ingredient))
