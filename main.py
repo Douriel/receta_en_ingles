@@ -322,7 +322,7 @@ def delete_shopping_list(shopping_list_uuid):
     stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
 
     if(stmt is None):
-        return JSONResponse(status_code=400, content="Recipe not found")
+        return JSONResponse(status_code=400, content="Shopping List not found")
     
     session.delete(stmt)
     session.commit()

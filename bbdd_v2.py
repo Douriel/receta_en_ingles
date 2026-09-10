@@ -65,7 +65,7 @@ class ShoppingListModel(Base):
     name : Mapped[str] = mapped_column(String(64), unique=True)
     notes : Mapped[str] = mapped_column(String(200))
     ingredients: Mapped[List["IngredientShoppingListModel"]] = relationship(
-        back_populates="shopping_list"
+        back_populates="shopping_list", cascade="all, delete"
     )
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r}, notes={self.notes!r}, ingredients={self.ingredients!r})"
