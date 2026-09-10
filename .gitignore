@@ -1,2 +1,5 @@
 /venv
 /__pycache__
+dto/__pycache__/ingredient.cpython-310.pyc
+dto/__pycache__/recipe.cpython-310.pyc
+dto/__pycache__/shopping_list.cpython-310.pyc
