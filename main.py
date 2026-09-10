@@ -280,24 +280,24 @@ def create_shopping_list(shopping_list:ShoppingListDto):
         # Middleman object
         shopping_list_associations = []
 
-        for ingredient_dto in shopping_list.ingredients:
-            ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
+        for ingredient_shopping_list_dto in shopping_list.ingredients:
+            ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
 
             if(ingredient is None):
                 ingredient = IngredientModel(
                     uuid=str(uuid4()),
-                    name=ingredient_dto.name, 
+                    name=ingredient_shopping_list_dto.ingredient.name, 
                     quantity=0, 
-                    unit=ingredient_dto.unit, 
-                    notes=ingredient_dto.notes                    
+                    unit=ingredient_shopping_list_dto.ingredient.unit, 
+                    notes=ingredient_shopping_list_dto.ingredient.notes                    
             )
             else: 
-                ingredient_dto.unit= ingredient.unit
+                ingredient_shopping_list_dto.unit= ingredient.unit
 
             assoc = IngredientShoppingListModel(
                 ingredient=ingredient,
-                unit=ingredient_dto.unit,
-                quantity=ingredient_dto.quantity
+                unit=ingredient_shopping_list_dto.unit,
+                quantity=ingredient_shopping_list_dto.quantity
             )
 
             shopping_list_associations.append(assoc)
