@@ -1,6 +1,6 @@
 from typing import List
 
-from dto.shopping_list import ShoppingListDto
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -8,17 +8,19 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from dto.recipe import RecipeDto
 from dto.ingredient import IngredientDto
+from dto.shopping_list import ShoppingListDto
+from dto.tag import Tag_dto
 
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
 
 
-from BBDD import IngredientModel, RecipeModel, ShoppingListModel 
+from bbdd_v2 import IngredientModel, RecipeModel, ShoppingListModel, TagModel
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
 
-engine = create_engine("sqlite:///test.db", echo=True)
+engine = create_engine("sqlite:///test2.db", echo=True)
 
 
 
@@ -85,7 +87,6 @@ def add_ingredient(ingredient:IngredientDto):
     session = Session(engine)
     # First thing is to check if this item is listed in the DB
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
-    print("this is fine")
     if(stmt is not None):
         return JSONResponse(status_code=400, content="Ingredient already exist")
     
@@ -339,3 +340,37 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
     
     session.commit()
     return JSONResponse(status_code=200, content="Recipe updated")
+
+
+
+## CRUD methods related with Tags
+
+#Create tag
+@app.post("/tag")
+def create_tag(tag_dto : Tag_dto):
+    session = Session(engine)
+
+    stmt = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
+
+    if(stmt is not None):
+        return JSONResponse(status_code=400, content="This tag already exist.")
+
+    tagModel = TagModel(uuid=str(uuid4()), name=tag_dto.name)
+
+    session.add(tagModel)
+    session.commit()
+
+    return JSONResponse(status_code=200, content="Tag created")
+
+@app.get("/tag")
+def get_tags():
+    session = Session(engine)
+
+    stmt = select(TagModel)
+
+    tag_list = []
+
+    for tag_model in session.scalars(stmt):
+        tag_list.append(Tag_dto.from_model(tag_model))
+
+    return JSONResponse(content = jsonable_encoder(tag_list))
