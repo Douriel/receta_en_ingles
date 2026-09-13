@@ -386,6 +386,21 @@ def get_tags():
 
     return JSONResponse(content = jsonable_encoder(tag_list))
 
+#Get all the tags name:
+@app.get("/tag/names")
+def get_ingredients_names():
+    session = Session(engine)
+
+    tag_names = []
+
+    stmt = session.scalars(select(TagModel.name))
+    
+    for name in stmt:
+        tag_names.append(name)
+
+    return JSONResponse(content=jsonable_encoder(tag_names))
+
+
 #Get one tag by UUID
 @app.get("/tag/{tag_uuid}")
 def get_tag(tag_uuid):
@@ -398,6 +413,22 @@ def get_tag(tag_uuid):
 
     return JSONResponse(status_code=200, content=jsonable_encoder(Tag_dto.from_model(stmt)))
 
+
+#Update a tag:
+# Update one ingredient
+@app.put("/tag/{tag_uuid}")
+def update_ingredient(tag_uuid, tag:Tag_dto):
+    session = Session(engine)
+    # Find if the ingredient exist in the data base
+    stmt = session.scalars(select(TagModel).where(TagModel.uuid == tag_uuid)).one_or_none()
+    # if not found the ingrediet cannot be updatad
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Tag not found")
+    
+    stmt.name = tag.name
+    
+    session.commit()
+    return JSONResponse(status_code=200, content="Tag updated")
 
 #Delete tag by UUID
 @app.delete("/tag/{tag_uuid}")

@@ -27,6 +27,8 @@
             </button> 
             </div>
         }
+
+        
         <div>
             <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
                 <i class="bi bi-plus-lg"></i>
@@ -37,6 +39,24 @@
                 El input definitivo
             (input)="ingredient.name().value.set($event.target.value)"
             </button> -->
+        </div>
+
+        <div>
+            <label for="recipeIng">Tags:</label>
+        </div>
+        @for (tag of recipeForm.tags; track tag) {
+            <div>
+                <input id="recipeIng"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
+                <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
+                <i class="bi bi-dash"></i>
+            </button> 
+            </div>
+        }
+
+        <div>
+            <button type="button" class="btn btn-outline-secondary" (click)="addTag()">
+                <i class="bi bi-plus-lg"></i>
+            </button>
         </div>
         
     </div>

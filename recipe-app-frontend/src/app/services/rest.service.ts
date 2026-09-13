@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { IngredientDto } from '../data/ingredient.dto';
 import { Observable } from 'rxjs';
 import { RecipeDto } from '../data/recipe.dto';
+import { TagDto } from '../data/tag.dto';
 
 @Injectable({providedIn: 'root'})
 export class RestService {
@@ -46,5 +47,27 @@ export class RestService {
 
     public deleteRecipe(deletedRecipeUUID: string){
         return this.httpClient.delete<any>(`http://127.0.0.1:8000/recipe/${deletedRecipeUUID}`)
+    }
+
+    // Services from Tags
+    public getTags(): Observable<TagDto[]> {
+        return this.httpClient.get<TagDto[]>('http://127.0.0.1:8000/tag');
+    }
+
+    public getTagNames(): Observable<string[]> {
+        return this.httpClient.get<string[]>('http://127.0.0.1:8000/tag/names');
+    }
+
+    public postTag(newTag: TagDto){
+        return this.httpClient.post<any>('http://127.0.0.1:8000/tag', newTag);
+    }
+
+    // Upadate is missing
+    public updateTag(updatedTag: TagDto){
+        return this.httpClient.put<any>(`http://127.0.0.1:8000/tag/${updatedTag.uuid}`, updatedTag);
+    }
+
+    public deleteTag(uuidTag: string){
+        return this.httpClient.delete<any>(`http://127.0.0.1:8000/tag/${uuidTag}`);
     }
 }
