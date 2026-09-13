@@ -4,7 +4,7 @@ from dto.ingredient import IngredientDto
 from pydantic import BaseModel
 from uuid import UUID
 
-from BBDD import IngredientModel, ShoppingListModel
+from bbdd_v2 import IngredientModel, ShoppingListModel
 
 class ShoppingListDto(BaseModel):
     uuid: str

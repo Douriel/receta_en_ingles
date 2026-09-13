@@ -182,9 +182,19 @@ def create_recipe(recipe:RecipeDto):
             ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
         else:
             ingredients_model.append(stmt2)
+            
+    tags_model:List[TagModel] = []
+  
+    for tag_dto in recipe.tags:
+        stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
+
+        if(stmt2 is None):
+            tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
+        else:
+            tags_model.append(stmt2)        
         
 
-    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model)
+    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model, tags = tags_model)
 
     session.add(recipe_model)
     session.commit()
