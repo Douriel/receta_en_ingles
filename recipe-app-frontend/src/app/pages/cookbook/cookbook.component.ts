@@ -1,26 +1,40 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { NavBarComponent } from "../../components/nav-bar/nav-bar.component";
-import { readonly } from '@angular/forms/signals';
+import { form, FormField, readonly } from '@angular/forms/signals';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
 import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
 import { NgSelectComponent } from '@ng-select/ng-select'
+import { TagDto } from '../../data/tag.dto';
+
+
+
+interface Formdata{
+  name: string;
+}
  
 @Component({
   selector: 'app-cookbook',
-  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent],
+  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent, FormField],
   templateUrl: './cookbook.component.html',
   styleUrl: './cookbook.component.scss'
 })
+
 export class CookbookComponent implements OnInit{
 
   recipeBook = signal<RecipeDto[]>([]);
   recipeBookAux = signal<RecipeDto[]>([]);
+  tagNames = signal<string[]>([]);
   readonly isCollapsed = signal(true);
 
+  private tagModel = signal<Formdata>({
+    name: ""
+  });
+
+  protected readonly tagForm = form(this.tagModel);
 
   constructor (
     private readonly restService: RestService,
@@ -29,6 +43,7 @@ export class CookbookComponent implements OnInit{
 
   ngOnInit(): void {
     this.retriveRecipeList();
+    this.retrieveListTag();
   }
   
   protected retriveRecipeList(): void{
@@ -40,7 +55,12 @@ export class CookbookComponent implements OnInit{
       error: err => console.error('Failed to load recipes', err)
     })
   }
-
+  protected retrieveListTag(): void {
+    this.restService.getTagNames().subscribe({
+      next: (list: string[]) => this.tagNames.set(list),
+      error: err => console.error('Failed to load Tags', err)
+    });
+  }
   protected createRecipe(): void {
     const modalRef = this.ngbModal.open(FormRecipeComponent);
     modalRef.closed.subscribe({
