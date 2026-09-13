@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CookbookComponent } from './pages/cookbook/cookbook.component';
-import { StoreroomComponent } from './pages/storeroom/storeroom.component';
+import { StoreroomComponent } from './pages/pantry/storeroom.component';
 import { HomeComponent } from './pages/home/home.component';
 
 
@@ -15,8 +15,8 @@ export const routes: Routes = [
         title: 'Cookbook for newbies'
     },
     {
-        path: 'storeroom',
+        path: 'pantry',
         component: StoreroomComponent,
-        title: 'Storeroom'
+        title: 'Pantry'
     }    
 ];

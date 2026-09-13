@@ -4,12 +4,14 @@ import { NavBarComponent } from "../../components/nav-bar/nav-bar.component";
 import { readonly } from '@angular/forms/signals';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
 import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
-
+import { NgSelectComponent } from '@ng-select/ng-select'
+ 
 @Component({
   selector: 'app-cookbook',
-  imports: [RouterLink, NavBarComponent],
+  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent],
   templateUrl: './cookbook.component.html',
   styleUrl: './cookbook.component.scss'
 })
@@ -17,6 +19,7 @@ export class CookbookComponent implements OnInit{
 
   recipeBook = signal<RecipeDto[]>([]);
   recipeBookAux = signal<RecipeDto[]>([]);
+  readonly isCollapsed = signal(true);
 
 
   constructor (
@@ -83,4 +86,6 @@ export class CookbookComponent implements OnInit{
       return recipe.name.toLowerCase().includes(element.toLowerCase());
     })); 
   }
+
+  
 }
