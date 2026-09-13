@@ -362,6 +362,7 @@ def create_tag(tag_dto : Tag_dto):
 
     return JSONResponse(status_code=200, content="Tag created")
 
+#Get all the tags
 @app.get("/tag")
 def get_tags():
     session = Session(engine)
@@ -374,3 +375,28 @@ def get_tags():
         tag_list.append(Tag_dto.from_model(tag_model))
 
     return JSONResponse(content = jsonable_encoder(tag_list))
+
+#Get one tag by UUID
+@app.get("/tag/{tag_uuid}")
+def get_tag(tag_uuid):
+    session = Session(engine)
+
+    stmt = session.scalars(select(TagModel).where(TagModel.uuid==tag_uuid)).one_or_none()
+
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Tag not found")
+
+    return JSONResponse(status_code=200, content=jsonable_encoder(Tag_dto.from_model(stmt)))
+
+
+#Delete tag by UUID
+@app.delete("/tag/{tag_uuid}")
+def delete_tag(tag_uuid):
+    session = Session(engine)
+
+    stmt = session.scalars(select(TagModel).where(TagModel.uuid==tag_uuid)).one_or_none()
+    if(stmt is None):
+        return JSONResponse(status_code=400, content="Tag not found")
+    session.delete(stmt)
+    session.commit()
+    return JSONResponse(status_code=200, content="Tag deleted")
