@@ -243,8 +243,19 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
         else:
             ingredients_model.append(stmt2)
 
+    tags_model:List[TagModel] = []
+  
+    for tag_dto in recipe_dto.tags:
+        stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
+
+        if(stmt2 is None):
+            tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
+        else:
+            tags_model.append(stmt2)    
+
     
     stmt.ingredients = ingredients_model
+    stmt.tags = tags_model
 
     session.commit()
     return JSONResponse(status_code=200, content="Recipe updated")
@@ -388,7 +399,7 @@ def get_tags():
 
 #Get all the tags name:
 @app.get("/tag/names")
-def get_ingredients_names():
+def get_tag_names():
     session = Session(engine)
 
     tag_names = []
@@ -415,13 +426,13 @@ def get_tag(tag_uuid):
 
 
 #Update a tag:
-# Update one ingredient
+# Update one tag
 @app.put("/tag/{tag_uuid}")
-def update_ingredient(tag_uuid, tag:Tag_dto):
+def update_tag(tag_uuid, tag:Tag_dto):
     session = Session(engine)
-    # Find if the ingredient exist in the data base
+    # Find if the tag exist in the data base
     stmt = session.scalars(select(TagModel).where(TagModel.uuid == tag_uuid)).one_or_none()
-    # if not found the ingrediet cannot be updatad
+    # if not found the tag cannot be updatad
     if(stmt is None):
         return JSONResponse(status_code=400, content="Tag not found")
     

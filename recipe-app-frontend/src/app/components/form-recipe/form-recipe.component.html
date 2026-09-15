@@ -42,11 +42,11 @@
         </div>
 
         <div>
-            <label for="recipeIng">Tags:</label>
+            <label for="tags">Tags:</label>
         </div>
         @for (tag of recipeForm.tags; track tag) {
             <div>
-                <input id="recipeIng"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
+                <input id="tags"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
                 <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
                 <i class="bi bi-dash"></i>
             </button> 

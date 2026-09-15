@@ -107,6 +107,7 @@ export class CookbookComponent implements OnInit{
             error: err => console.error('Recipe could not be deleted', err)
           })
         } else{
+          console.log(result);
           this.restService.updateRecipe(result).subscribe({
             next: () => {
               this.retriveRecipeList();

@@ -122,7 +122,7 @@ export class FormRecipeComponent implements OnInit {
 			debounceTime(200),
 			distinctUntilChanged(),
 			map((term) =>
-				term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10),
+				term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
 			),
 		);
 
@@ -131,7 +131,7 @@ export class FormRecipeComponent implements OnInit {
 			debounceTime(200),
 			distinctUntilChanged(),
 			map((term) =>
-				term.length < 2 ? [] : this.tagNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10),
+				term.length < 2 ? [] : this.tagNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
 			),
 		);
 
