@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, computed } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { NavBarComponent } from "../../components/nav-bar/nav-bar.component";
 import { form, FormField, readonly } from '@angular/forms/signals';
@@ -13,7 +13,7 @@ import { TagDto } from '../../data/tag.dto';
 
 
 interface Formdata{
-  name: string;
+  name: string[];
 }
  
 @Component({
@@ -26,15 +26,32 @@ interface Formdata{
 export class CookbookComponent implements OnInit{
 
   recipeBook = signal<RecipeDto[]>([]);
-  recipeBookAux = signal<RecipeDto[]>([]);
+  //recipeBookAux = signal<RecipeDto[]>([]);
+  searchString = signal<string>("");
   tagNames = signal<string[]>([]);
   readonly isCollapsed = signal(true);
 
   private tagModel = signal<Formdata>({
-    name: ""
+    name: []
   });
 
   protected readonly tagForm = form(this.tagModel);
+
+  protected readonly recipeBookAux = computed<RecipeDto[]>(() => {
+    return this.recipeBook().filter(recipe => {
+      if(!recipe.name.toLowerCase().includes(this.searchString().toLowerCase()))
+        return false;
+      if(!this.filterTags(recipe.tags.map(tag => tag.name), this.tagForm.name().value()))
+        return false;
+      return true;
+    })
+  })
+
+  private filterTags(recipeTags:string[], filterTags:string[]){
+    //Devolvemos true si todos los tags del filtro estan en la receta.
+    return filterTags.every(filterTag => recipeTags.includes(filterTag));
+  }
+
 
   constructor (
     private readonly restService: RestService,
@@ -50,7 +67,7 @@ export class CookbookComponent implements OnInit{
     this.restService.getRecipes().subscribe({
       next: (list: RecipeDto[]) => {
         this.recipeBook.set(list);
-        this.recipeBookAux.set(list);
+        //this.recipeBookAux.set(list);
       },
       error: err => console.error('Failed to load recipes', err)
     })
@@ -102,10 +119,9 @@ export class CookbookComponent implements OnInit{
   }
 
   protected searchElement(element: string): void {
-    this.recipeBookAux.set(this.recipeBook().filter(recipe => {
-      return recipe.name.toLowerCase().includes(element.toLowerCase());
-    })); 
+    this.searchString.set(element);
   }
 
+  
   
 }
