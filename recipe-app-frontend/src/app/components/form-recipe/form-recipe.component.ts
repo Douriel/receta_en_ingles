@@ -9,6 +9,7 @@ import { TagDto } from '../../data/tag.dto';
 
 interface Formdata{
   name: string;
+  time: number;
   description: string;
   steps: string;
   ingredients: IngredientDto[];
@@ -56,6 +57,7 @@ export class FormRecipeComponent implements OnInit {
   }
   private readonly recipeModel = signal<Formdata>({
     name: "",
+    time: 0,
     description: "",
     steps: "",
     ingredients: [],

@@ -194,7 +194,7 @@ def create_recipe(recipe:RecipeDto):
             tags_model.append(stmt2)        
         
 
-    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model, tags = tags_model)
+    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, time = recipe.time, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model, tags = tags_model)
 
     session.add(recipe_model)
     session.commit()
@@ -230,6 +230,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
     
     
     stmt.name = recipe_dto.name
+    stmt.time = recipe_dto.time
     stmt.description = recipe_dto.description
     stmt.steps = recipe_dto.steps
     

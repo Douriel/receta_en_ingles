@@ -75,6 +75,7 @@ class RecipeModel(Base):
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uuid : Mapped[str] = mapped_column(String(36), index=True)
     name : Mapped[str] = mapped_column(String(64), unique=True)
+    time : Mapped[int] = mapped_column(default=0)
     description : Mapped[str] = mapped_column(Text(), default="")
     steps : Mapped[str] = mapped_column(Text(), default="")
     ingredients: Mapped[List["IngredientModel"]] = relationship(
