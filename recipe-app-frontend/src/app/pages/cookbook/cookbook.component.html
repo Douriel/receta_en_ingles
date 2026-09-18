@@ -15,6 +15,9 @@
 				<div class="search-tag">
 					<ng-select multiple class="w-100" [items]="tagNames()" [formField]="tagForm.name" />
 				</div>
+				<div>
+					<ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"></ngx-slider>
+				</div>
 			</div>
 		</div>
 	</div>

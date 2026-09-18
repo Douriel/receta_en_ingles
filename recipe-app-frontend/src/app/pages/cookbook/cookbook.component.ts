@@ -5,6 +5,7 @@ import { form, FormField, readonly } from '@angular/forms/signals';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
+import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
 import { NgSelectComponent } from '@ng-select/ng-select'
@@ -18,7 +19,7 @@ interface Formdata{
  
 @Component({
   selector: 'app-cookbook',
-  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent, FormField],
+  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent, FormField, NgxSliderModule],
   templateUrl: './cookbook.component.html',
   styleUrl: './cookbook.component.scss'
 })
@@ -26,7 +27,6 @@ interface Formdata{
 export class CookbookComponent implements OnInit{
 
   recipeBook = signal<RecipeDto[]>([]);
-  //recipeBookAux = signal<RecipeDto[]>([]);
   searchString = signal<string>("");
   tagNames = signal<string[]>([]);
   readonly isCollapsed = signal(true);
@@ -37,6 +37,27 @@ export class CookbookComponent implements OnInit{
 
   protected readonly tagForm = form(this.tagModel);
 
+  // Double slider selector varibles:
+  value: number = 0;
+  highValue: number = 241;
+  options: Options = {
+    showTicks: true,
+    hideLimitLabels: true,
+    hidePointerLabels: true,
+    minRange: 1,
+    stepsArray: [
+      {value:0, legend:"0m"},
+      {value:15, legend:"15m"}, 
+      {value:30, legend:"30m"},
+      {value:45, legend:"45m"},
+      {value:60, legend:"1h"},
+      {value:120, legend:"2h"},
+      {value:180, legend: "3h"},
+      {value:240, legend: "4h"},
+      {value:241, legend: "Any"}
+    ]
+  }
+  
   protected readonly recipeBookAux = computed<RecipeDto[]>(() => {
     return this.recipeBook().filter(recipe => {
       if(!recipe.name.toLowerCase().includes(this.searchString().toLowerCase()))
