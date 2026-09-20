@@ -1,7 +1,5 @@
 import { Component, signal, OnInit, computed } from '@angular/core';
-import { RouterLink } from "@angular/router";
 import { NavBarComponent } from "../../components/nav-bar/nav-bar.component";
-import { form, FormField, readonly } from '@angular/forms/signals';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
@@ -9,18 +7,11 @@ import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
 import { NgSelectComponent } from '@ng-select/ng-select'
-import { TagDto } from '../../data/tag.dto';
-import { single } from 'rxjs';
-
-
-
-interface Formdata{
-  name: string[];
-}
+import { FormsModule } from '@angular/forms';
  
 @Component({
   selector: 'app-cookbook',
-  imports: [RouterLink, NavBarComponent, NgbCollapse, NgSelectComponent, FormField, NgxSliderModule],
+  imports: [NavBarComponent, NgbCollapse, NgSelectComponent, NgxSliderModule, FormsModule],
   templateUrl: './cookbook.component.html',
   styleUrl: './cookbook.component.scss'
 })
@@ -30,13 +21,11 @@ export class CookbookComponent implements OnInit{
   recipeBook = signal<RecipeDto[]>([]);
   searchString = signal<string>("");
   tagNames = signal<string[]>([]);
+  ingNames = signal<string[]>([]);
+  filterTags = signal<string[]>([]);
+  filterIngs = signal<string[]>([]);
   readonly isCollapsed = signal(true);
 
-  private tagModel = signal<Formdata>({
-    name: []
-  });
-
-  protected readonly tagForm = form(this.tagModel);
 
   // Double slider selector varibles:
   value = signal<number>(0);
@@ -63,7 +52,9 @@ export class CookbookComponent implements OnInit{
     return this.recipeBook().filter(recipe => {
       if(!recipe.name.toLowerCase().includes(this.searchString().toLowerCase()))
         return false;
-      if(!this.filterTags(recipe.tags.map(tag => tag.name), this.tagForm.name().value()))
+      if(!this._filterTags(recipe.tags.map(tag => tag.name), this.filterTags()))
+        return false;
+      if(!this._filterIngs(recipe.ingredients.map(ing => ing.name), this.filterIngs()))
         return false;
       if(recipe.time <= this.value())
         return false;
@@ -73,11 +64,14 @@ export class CookbookComponent implements OnInit{
     })
   })
 
-  private filterTags(recipeTags:string[], filterTags:string[]){
+  private _filterTags(recipeTags:string[], filterTags:string[]){
     //Devolvemos true si todos los tags del filtro estan en la receta.
     return filterTags.every(filterTag => recipeTags.includes(filterTag));
   }
-
+  private _filterIngs(recipeIng:string[], filterIng:string[]){
+    //Devolvemos true si todos los Ingredientes del filtro estan en la receta.
+    return filterIng.every(filterIng => recipeIng.includes(filterIng));
+  }
 
   constructor (
     private readonly restService: RestService,
@@ -86,6 +80,7 @@ export class CookbookComponent implements OnInit{
 
   ngOnInit(): void {
     this.retriveRecipeList();
+    this.retrieveListIng();
     this.retrieveListTag();
   }
   
@@ -98,6 +93,12 @@ export class CookbookComponent implements OnInit{
       error: err => console.error('Failed to load recipes', err)
     })
   }
+  protected retrieveListIng(): void {
+    this.restService.getIngredientsNames().subscribe({
+      next: (list: string[]) => this.ingNames.set(list),
+      error: err => console.error('Failed to load ingredients', err)
+    });
+  }  
   protected retrieveListTag(): void {
     this.restService.getTagNames().subscribe({
       next: (list: string[]) => this.tagNames.set(list),

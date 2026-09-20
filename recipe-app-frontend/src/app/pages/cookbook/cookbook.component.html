@@ -13,8 +13,11 @@
 			<div class="card-body">
 				<h4>Advanced Search:</h4>
 				<div class="search-tag">
-					<ng-select multiple class="w-100" [items]="tagNames()" [formField]="tagForm.name" />
+					<ng-select multiple class="w-100" [items]="tagNames()" [(ngModel)]="filterTags"/>
 				</div>
+				<div class="search-tag">
+					<ng-select multiple class="w-100" [items]="ingNames()" [(ngModel)]="filterIngs"/>
+				</div>				
 				<div>
 					<ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"></ngx-slider>
 				</div>
