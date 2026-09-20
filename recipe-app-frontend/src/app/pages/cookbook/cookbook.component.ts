@@ -10,6 +10,7 @@ import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
 import { NgSelectComponent } from '@ng-select/ng-select'
 import { TagDto } from '../../data/tag.dto';
+import { single } from 'rxjs';
 
 
 
@@ -38,8 +39,8 @@ export class CookbookComponent implements OnInit{
   protected readonly tagForm = form(this.tagModel);
 
   // Double slider selector varibles:
-  value: number = 0;
-  highValue: number = 241;
+  value = signal<number>(0);
+  highValue = signal<number>(241);
   options: Options = {
     showTicks: true,
     hideLimitLabels: true,
@@ -64,6 +65,10 @@ export class CookbookComponent implements OnInit{
         return false;
       if(!this.filterTags(recipe.tags.map(tag => tag.name), this.tagForm.name().value()))
         return false;
+      if(recipe.time <= this.value())
+        return false;
+      if(this.highValue() != 241 && recipe.time >= this.highValue())
+        return false;      
       return true;
     })
   })
