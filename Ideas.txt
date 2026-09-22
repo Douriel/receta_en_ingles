@@ -1,13 +1,18 @@
-Añadir el atributo de tiempo a las recetas
-Añadir tags a las recetas
 
-
-Buscador de recetas por ingredientes que lo lleven.
-
-Buscador de recetas por tags.
 
 Buscador de ingredientes
 
 Lista de compra
 
 validador de nombre (Si ya esta en la lista no se pueda llenar).
+
+Cambiar en el form de recipe el campo elaboration time por un reloj.
+
+
+Done:
+Añadir el atributo de tiempo a las recetas.
+Añadir tags a las recetas.
+Buscador de recetas por ingredientes que lo lleven.
+Buscador de recetas por tags.
+Ordenar las listas.
+

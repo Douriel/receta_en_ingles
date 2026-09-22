@@ -6,6 +6,7 @@ import { IngredientDto } from '../../data/ingredient.dto';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction } from 'rxjs';
 import { RestService } from '../../services/rest.service';
 import { TagDto } from '../../data/tag.dto';
+import { nameExists } from '../../utils/validation.utils';
 
 interface Formdata{
   name: string;
@@ -14,10 +15,6 @@ interface Formdata{
   steps: string;
   ingredients: IngredientDto[];
   tags: TagDto[];
-}
-
-function ItemSchema(ing: SchemaPathTree<IngredientDto>) {
-  required(ing.name, {message: 'Item name is required'});
 }
 
 @Component({
@@ -32,6 +29,7 @@ export class FormRecipeComponent implements OnInit {
 
   ingNames = signal<string[]>([])
   tagNames = signal<string[]>([])
+  recipeNames = signal<string[]>([])
 
   constructor(
     protected readonly activeModal:NgbActiveModal,
@@ -41,18 +39,26 @@ export class FormRecipeComponent implements OnInit {
   ngOnInit(): void {
     this.retrieveListIng();
     this.retrieveListTag();
+    this.retrieveListRecipe();
   }
 
   protected retrieveListIng(): void {
     this.restService.getIngredientsNames().subscribe({
       next: (list: string[]) => this.ingNames.set(list),
-      error: err => console.error('Failed to load ingredients', err)
+      error: err => console.error('Failed to load ingredients names', err)
     });
   }
   protected retrieveListTag(): void {
     this.restService.getTagNames().subscribe({
       next: (list: string[]) => this.tagNames.set(list),
-      error: err => console.error('Failed to load Tags', err)
+      error: err => console.error('Failed to load Tags names', err)
+    });
+  }
+
+  protected retrieveListRecipe(): void {
+    this.restService.getRecipesNames().subscribe({
+      next: (list: string[]) => this.recipeNames.set(list),
+      error: err => console.error('Failed to load recipe names', err)
     });
   }
   private readonly recipeModel = signal<Formdata>({
@@ -64,11 +70,14 @@ export class FormRecipeComponent implements OnInit {
     tags: []
   });
 
+  private itemSchema(ing: SchemaPathTree<IngredientDto>) {
+    required(ing.name, {message: 'Item name is required'});
+  }
   protected readonly recipeForm = form(this.recipeModel, (schemaPath) =>{
     required(schemaPath.name);
+    nameExists(schemaPath.name, this.recipeNames, {message:"Recipe name is already taken"});
     maxLength(schemaPath.name, 64);
-
-    applyEach(schemaPath.ingredients, ItemSchema);
+    applyEach(schemaPath.ingredients, this.itemSchema);
   });
 
   protected readonly modalTitle = signal("Write a new recipe");

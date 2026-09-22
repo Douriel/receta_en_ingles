@@ -12,13 +12,14 @@
 		<div class="card">
 			<div class="card-body">
 				<h4>Advanced Search:</h4>
-				<div class="search-tag">
-					<ng-select multiple class="w-100" [items]="tagNames()" [(ngModel)]="filterTags"/>
+				<div class="filter">
+					<ng-select multiple class="w-100" [items]="tagNames()" [(ngModel)]="filterTags" placeholder="Filter by Tags"/>
 				</div>
-				<div class="search-tag">
-					<ng-select multiple class="w-100" [items]="ingNames()" [(ngModel)]="filterIngs"/>
+				<div class="filter">
+					<ng-select multiple class="w-100" [items]="ingNames()" [(ngModel)]="filterIngs" placeholder="Filter by ingredients"/>
 				</div>				
-				<div>
+				<div class="mb-3">
+					<p>Filter by elaboration time:</p>
 					<ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"></ngx-slider>
 				</div>
 			</div>

@@ -37,6 +37,10 @@ export class RestService {
         return this.httpClient.get<RecipeDto[]>('http://127.0.0.1:8000/recipe');
     }
 
+    public getRecipesNames(): Observable<string[]> {
+        return this.httpClient.get<string[]>('http://127.0.0.1:8000/recipe/names');
+    }    
+
     public postRecipe(newRecipe: RecipeDto) {
       return this.httpClient.post<any>('http://127.0.0.1:8000/recipe', newRecipe)
     }

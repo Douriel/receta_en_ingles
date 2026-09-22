@@ -46,7 +46,7 @@ app.add_middleware(
 def get_ingredents():
     session = Session(engine)
 
-    stmt = select(IngredientModel)
+    stmt = select(IngredientModel).order_by(IngredientModel.name)
 
     ingredient_list = []
 
@@ -61,7 +61,7 @@ def get_ingredients_names():
 
     ingredients_names = []
 
-    stmt = session.scalars(select(IngredientModel.name))
+    stmt = session.scalars(select(IngredientModel.name).order_by(IngredientModel.name))
     
     for name in stmt:
         ingredients_names.append(name)
@@ -139,7 +139,7 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
 def get_recipes():
     session = Session(engine)
 
-    stmt = select(RecipeModel)
+    stmt = select(RecipeModel).order_by(RecipeModel.name)
 
     recipe_list = []
 
@@ -148,6 +148,19 @@ def get_recipes():
 
     return JSONResponse(content=jsonable_encoder(recipe_list))
 
+# Get recipes name:
+@app.get("/recipe/names")
+def get_recipe_names():
+    session = Session(engine)
+
+    recipes_names = []
+
+    stmt = session.scalars(select(RecipeModel.name).order_by(RecipeModel.name))
+    
+    for name in stmt:
+        recipes_names.append(name)
+
+    return JSONResponse(content=jsonable_encoder(recipes_names))
 
 # Get an specific recipe.
 @app.get("/recipe/{recipe_uuid}")
