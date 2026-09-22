@@ -1,7 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IngredientDto } from '../../data/ingredient.dto';
+import { nameExists } from '../../utils/validation.utils';
+import { RestService } from '../../services/rest.service';
 
 interface Formdata{
   name: string;
@@ -17,11 +19,31 @@ interface Formdata{
   templateUrl: './form-ingredient.component.html',
   styleUrl: './form-ingredient.component.scss'
 })
-export class FormIngredientComponent {
+export class FormIngredientComponent implements OnInit{
 
   protected editFlag = false;
+  ingNames = signal<string[]>([])
 
-  constructor(protected readonly activeModal:NgbActiveModal){}
+
+  constructor(
+    protected readonly activeModal:NgbActiveModal,
+    private readonly restService: RestService
+  ){}
+
+  ngOnInit(): void {
+    this.retrieveListIng();
+  }
+
+  protected retrieveListIng(): void {
+    this.restService.getIngredientsNames().subscribe({
+      next: (list: string[]) => {
+        this.ingNames.set(list)
+        if(this.editFlag)
+          this.ingNames.update(names => names.filter(name => this.ingModel().name !== name))       
+      },
+      error: err => console.error('Failed to load ingredients names', err)
+    });
+  }
 
   private readonly ingModel = signal<Formdata>({
     name: "",
@@ -33,6 +55,8 @@ export class FormIngredientComponent {
   protected readonly ingForm = form(this.ingModel, (schemaPath) =>{
     required(schemaPath.name);
     maxLength(schemaPath.name, 64);
+    nameExists(schemaPath.name, this.ingNames, {message:"Recipe name is already taken"});
+
     maxLength(schemaPath.unit, 16);
     maxLength(schemaPath.notes, 200);
     min(schemaPath.quantity, 0);

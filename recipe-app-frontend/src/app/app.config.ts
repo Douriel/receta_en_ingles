@@ -4,7 +4,18 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideSignalFormsConfig, FormField } from '@angular/forms/signals';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(withXhr()), importProvidersFrom(NgbModule)]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideRouter(routes), 
+    provideHttpClient(withXhr()), 
+    importProvidersFrom(NgbModule),
+    provideSignalFormsConfig({
+      classes: {
+        "is-invalid": (formField) => formField.state().invalid() && formField.state().dirty()
+      }
+    })
+  ]
 };

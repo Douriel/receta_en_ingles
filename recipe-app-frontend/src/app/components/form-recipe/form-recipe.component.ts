@@ -57,7 +57,11 @@ export class FormRecipeComponent implements OnInit {
 
   protected retrieveListRecipe(): void {
     this.restService.getRecipesNames().subscribe({
-      next: (list: string[]) => this.recipeNames.set(list),
+      next: (list: string[]) => {
+        this.recipeNames.set(list)
+        if(this.editFlag)
+          this.recipeNames.update(names => names.filter(name => this.recipeModel().name !== name)) 
+      },
       error: err => console.error('Failed to load recipe names', err)
     });
   }
@@ -101,6 +105,7 @@ export class FormRecipeComponent implements OnInit {
   setRecipe(recipeEdit: RecipeDto) {
     this.editFlag = true;
     this.recipeModel.set(recipeEdit);
+    console.log("we are editing");
     this.modalTitle.set("Edit the recipe");
   }
 
