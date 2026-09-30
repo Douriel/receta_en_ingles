@@ -10,7 +10,8 @@ import { nameExists } from '../../utils/validation.utils';
 
 interface Formdata{
   name: string;
-  time: number;
+  mins: number;
+  hours: number;
   description: string;
   steps: string;
   ingredients: IngredientDto[];
@@ -31,6 +32,8 @@ export class FormRecipeComponent implements OnInit {
   tagNames = signal<string[]>([])
   recipeNames = signal<string[]>([])
 
+  private uuid: string = "";
+
   constructor(
     protected readonly activeModal:NgbActiveModal,
     private readonly restService: RestService
@@ -40,6 +43,17 @@ export class FormRecipeComponent implements OnInit {
     this.retrieveListIng();
     this.retrieveListTag();
     this.retrieveListRecipe();
+  }
+
+  protected timeConversionLoading(totalMins : number): void{
+    if(totalMins>=60){
+      this.recipeForm.hours().value.update(hours => hours+1);
+      totalMins -= 60;
+      this.timeConversionLoading(totalMins);
+    }
+    else{
+      this.recipeForm.mins().value.update(mins => totalMins);
+    }
   }
 
   protected retrieveListIng(): void {
@@ -67,7 +81,8 @@ export class FormRecipeComponent implements OnInit {
   }
   private readonly recipeModel = signal<Formdata>({
     name: "",
-    time: 0,
+    mins: 0,
+    hours: 0,
     description: "",
     steps: "",
     ingredients: [],
@@ -82,6 +97,8 @@ export class FormRecipeComponent implements OnInit {
     nameExists(schemaPath.name, this.recipeNames, {message:"Recipe name is already taken"});
     maxLength(schemaPath.name, 64);
     applyEach(schemaPath.ingredients, this.itemSchema);
+    min(schemaPath.mins, 0);
+    min(schemaPath.hours, 0);
   });
 
   protected readonly modalTitle = signal("Write a new recipe");
@@ -92,20 +109,38 @@ export class FormRecipeComponent implements OnInit {
 
   protected submitForm(){
     if(this.recipeForm().valid()){
-      const recipeDto = new RecipeDto(this.recipeModel());
+      const data = this.recipeModel();
+      console.log("Submiting the form")
+      console.log(data.hours*60+data.mins)
+      const recipeDto = new RecipeDto({
+        uuid: this.uuid,
+        name: data.name,
+        time: data.hours*60+data.mins,
+        description: data.description,
+        steps: data.steps,
+        ingredients: data.ingredients,
+        tags: data.tags
+      });
       this.activeModal.close(recipeDto);
     }
   }
 
   protected deleteRec() {
-    const recipeDto = new RecipeDto(this.recipeModel());
-    this.activeModal.close(recipeDto.uuid);
+    this.activeModal.close(this.uuid);
   }
-
   setRecipe(recipeEdit: RecipeDto) {
     this.editFlag = true;
-    this.recipeModel.set(recipeEdit);
-    console.log("we are editing");
+    this.uuid = recipeEdit.uuid
+    this.recipeModel.set({
+      name: recipeEdit.name,
+      mins: 0,
+      hours: 0,
+      description: recipeEdit.description,
+      steps: recipeEdit.steps,
+      ingredients: recipeEdit.ingredients,
+      tags: recipeEdit.tags
+    });
+    this.timeConversionLoading(recipeEdit.time);
     this.modalTitle.set("Edit the recipe");
   }
 

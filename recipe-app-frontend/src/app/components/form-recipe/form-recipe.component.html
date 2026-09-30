@@ -8,10 +8,12 @@
             <label for="recipeName">Name</label>
             <input id="recipeName" type="text" [formField]="recipeForm.name">
         </div>
-        <div>
+
+        <div class="time-picker">
             <label for="recipeTime">Elaboration time</label>
-            <input id="recipeTime" type="number" [formField]="recipeForm.time">
-        </div>        
+            <input id="recipeTime" type="number" [formField]="recipeForm.hours">
+            <input id="recipeTime" type="number" [formField]="recipeForm.mins">
+        </div>                
         <div>
             <label for="recipeDescription">Description</label>
             <input id="recipeDescription" type="text" [formField]="recipeForm.description">
