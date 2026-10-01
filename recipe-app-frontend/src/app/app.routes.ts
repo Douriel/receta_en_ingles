@@ -1,7 +1,10 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 import { CookbookComponent } from './pages/cookbook/cookbook.component';
 import { StoreroomComponent } from './pages/pantry/storeroom.component';
-import { HomeComponent } from './pages/home/home.component';
+import { TagsComponent } from './pages/tags/tags.component';
+import { ShoppingListComponent } from './pages/shopping-list/shopping-list.component';
+
 
 
 export const routes: Routes = [
@@ -18,5 +21,15 @@ export const routes: Routes = [
         path: 'pantry',
         component: StoreroomComponent,
         title: 'Pantry'
-    }    
+    },
+    {
+        path: 'tags',
+        component: TagsComponent,
+        title: 'Tags for your recipes'
+    },
+    {
+        path: 'shopping-list',
+        component: ShoppingListComponent,
+        title: 'Do not forget the Fairy again'
+    } 
 ];
