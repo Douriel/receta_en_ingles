@@ -15,7 +15,14 @@
             display: flex;
             flex-direction: column;
         }
-    }
+ 
+    }     
+}
+
+.time-picker{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .modal-footer{

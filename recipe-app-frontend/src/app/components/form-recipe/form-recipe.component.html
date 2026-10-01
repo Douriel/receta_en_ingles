@@ -9,11 +9,20 @@
             <input id="recipeName" type="text" [formField]="recipeForm.name">
         </div>
 
-        <div class="time-picker">
+        <div>
             <label for="recipeTime">Elaboration time</label>
-            <input id="recipeTime" type="number" [formField]="recipeForm.hours">
-            <input id="recipeTime" type="number" [formField]="recipeForm.mins">
-        </div>                
+            <div class="time-picker">
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" placeholder="00" aria-label="HH" aria-describedby="basic-addon2" [formField]="recipeForm.hours">
+                    <span class="input-group-text">HH</span>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" placeholder="00" aria-label="HH" aria-describedby="basic-addon2" [formField]="recipeForm.mins">
+                    <span class="input-group-text">mm</span>
+                </div>
+            </div>
+        </div>
+
         <div>
             <label for="recipeDescription">Description</label>
             <input id="recipeDescription" type="text" [formField]="recipeForm.description">

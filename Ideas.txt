@@ -1,11 +1,9 @@
 
 
-Buscador de ingredientes
 
 Lista de compra
 
 
-Cambiar en el form de recipe el campo elaboration time por un reloj.
 
 
 Done:
@@ -15,4 +13,8 @@ Buscador de recetas por ingredientes que lo lleven.
 Buscador de recetas por tags.
 Ordenar las listas.
 validador de nombre (Si ya esta en la lista no se pueda llenar).
+Buscador de ingredientes
+Cambiar en el form de recipe el campo elaboration time por un reloj.
+
+
 
