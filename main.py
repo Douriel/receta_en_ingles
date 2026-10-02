@@ -273,8 +273,8 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
     
     stmt.ingredients = ingredients_model
     stmt.tags = tags_model
-    session.close()
     session.commit()
+    session.close()
     return JSONResponse(status_code=200, content="Recipe updated")
 
 

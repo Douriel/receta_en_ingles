@@ -56,7 +56,7 @@ export class CookbookComponent implements OnInit{
         return false;
       if(!this._filterIngs(recipe.ingredients.map(ing => ing.name), this.filterIngs()))
         return false;
-      if(recipe.time <= this.value())
+      if(recipe.time < this.value())
         return false;
       if(this.highValue() != 241 && recipe.time >= this.highValue())
         return false;      
@@ -89,6 +89,7 @@ export class CookbookComponent implements OnInit{
       next: (list: RecipeDto[]) => {
         this.recipeBook.set(list);
         //this.recipeBookAux.set(list);
+        console.log(this.recipeBook())
       },
       error: err => console.error('Failed to load recipes', err)
     })
