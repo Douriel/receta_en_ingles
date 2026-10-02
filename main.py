@@ -53,6 +53,7 @@ def get_ingredents():
     for ingredient_model in session.scalars(stmt):
         ingredient_list.append(IngredientDto.from_model(ingredient_model))
 
+    session.close()
     return JSONResponse(content=jsonable_encoder(ingredient_list))
 
 @app.get("/ingredient/names")
@@ -66,6 +67,7 @@ def get_ingredients_names():
     for name in stmt:
         ingredients_names.append(name)
 
+    session.close()
     return JSONResponse(content=jsonable_encoder(ingredients_names))
     
 
@@ -77,7 +79,7 @@ def get_ingredient(ingredient_uuid):
 
     if(stmt is None):
         return JSONResponse(status_code=400, content="Ingredient not found")
-    
+    session.close()
     return JSONResponse(content=jsonable_encoder(IngredientDto.from_model(stmt)))
 
     
@@ -94,7 +96,7 @@ def add_ingredient(ingredient:IngredientDto):
 
     session.add(ingredient_model)
     session.commit()
-    
+    session.close()
     return JSONResponse(status_code=200, content="Ingredient created")
 
 # Delete one ingredient
@@ -108,7 +110,7 @@ def delete_ingredient(ingredient_uuid):
         return JSONResponse(status_code=400, content="Ingredient not found")
     session.delete(stmt)
     session.commit()
-
+    session.close()
     return JSONResponse(status_code=200, content="Ingredient deleted")
 
 
@@ -128,6 +130,7 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
     stmt.notes = ingredient.notes
     
     session.commit()
+    session.close()
     return JSONResponse(status_code=200, content="Ingredient updated")
 
 
@@ -145,7 +148,7 @@ def get_recipes():
 
     for recipe_model in session.scalars(stmt):
         recipe_list.append(RecipeDto.from_model(recipe_model))
-
+    session.close()
     return JSONResponse(content=jsonable_encoder(recipe_list))
 
 # Get recipes name:
@@ -159,7 +162,7 @@ def get_recipe_names():
     
     for name in stmt:
         recipes_names.append(name)
-
+    session.close()
     return JSONResponse(content=jsonable_encoder(recipes_names))
 
 # Get an specific recipe.
@@ -172,7 +175,7 @@ def get_recipe(recipe_uuid):
     #Check if it exist on the DB
     if(stmt is None):
         return JSONResponse(status_code=400, content="Recipe not found")
-    
+    session.close()
     return JSONResponse(content=jsonable_encoder(RecipeDto.from_model(stmt)))
 
 # Create a new recipe
@@ -211,7 +214,7 @@ def create_recipe(recipe:RecipeDto):
 
     session.add(recipe_model)
     session.commit()
-
+    session.close()
     return JSONResponse(content="Recipe created")
 
 
@@ -227,7 +230,7 @@ def delete_recipe(recipe_uuid):
     
     session.delete(stmt)
     session.commit()
-    
+    session.close()
     return JSONResponse(content="Recipe deleted succesfully")
 
 
@@ -270,7 +273,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
     
     stmt.ingredients = ingredients_model
     stmt.tags = tags_model
-
+    session.close()
     session.commit()
     return JSONResponse(status_code=200, content="Recipe updated")
 
@@ -288,7 +291,7 @@ def get_shopping_lists():
 
     for shopping_list in session.scalars(stmt):
         shopping_list_list.append(ShoppingListDto.from_model(shopping_list))
-
+    session.close()
     return JSONResponse(content=jsonable_encoder(shopping_list_list))
 
 # Get an specific shopping list
@@ -300,7 +303,7 @@ def get_shopping_list(shopping_list_uuid):
 
     if(stmt is None):
         return JSONResponse(status_code=400, content="Shopping List not found")
-
+    session.close()
     return JSONResponse(content=jsonable_encoder(ShoppingListDto.from_model(stmt)))
 
 # Create a new shopping list
@@ -327,7 +330,7 @@ def create_shopping_list(shopping_list:ShoppingListDto):
 
     session.add(shopping_list_model)
     session.commit()
-
+    session.close()
     return JSONResponse(status_code=200, content="Shopping List created")
 
 # Delete a shopping List
@@ -342,7 +345,7 @@ def delete_shopping_list(shopping_list_uuid):
     
     session.delete(stmt)
     session.commit()
-    
+    session.close()
     return JSONResponse(status_code=200, content="Shopping list deleted succesfully")
 
 # Update a shopping list
@@ -372,8 +375,8 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
                 ingredients_model.append(stmt2)
 
     stmt.ingredients = ingredients_model
-    
     session.commit()
+    session.close()
     return JSONResponse(status_code=200, content="Recipe updated")
 
 
@@ -394,7 +397,7 @@ def create_tag(tag_dto : Tag_dto):
 
     session.add(tagModel)
     session.commit()
-
+    session.close()
     return JSONResponse(status_code=200, content="Tag created")
 
 #Get all the tags
@@ -408,7 +411,7 @@ def get_tags():
 
     for tag_model in session.scalars(stmt):
         tag_list.append(Tag_dto.from_model(tag_model))
-
+    session.close()
     return JSONResponse(content = jsonable_encoder(tag_list))
 
 #Get all the tags name:
@@ -422,7 +425,7 @@ def get_tag_names():
     
     for name in stmt:
         tag_names.append(name)
-
+    session.close()
     return JSONResponse(content=jsonable_encoder(tag_names))
 
 
@@ -435,7 +438,7 @@ def get_tag(tag_uuid):
 
     if(stmt is None):
         return JSONResponse(status_code=400, content="Tag not found")
-
+    session.close()
     return JSONResponse(status_code=200, content=jsonable_encoder(Tag_dto.from_model(stmt)))
 
 
@@ -451,8 +454,8 @@ def update_tag(tag_uuid, tag:Tag_dto):
         return JSONResponse(status_code=400, content="Tag not found")
     
     stmt.name = tag.name
-    
     session.commit()
+    session.close()
     return JSONResponse(status_code=200, content="Tag updated")
 
 #Delete tag by UUID
@@ -465,4 +468,5 @@ def delete_tag(tag_uuid):
         return JSONResponse(status_code=400, content="Tag not found")
     session.delete(stmt)
     session.commit()
+    session.close()
     return JSONResponse(status_code=200, content="Tag deleted")
