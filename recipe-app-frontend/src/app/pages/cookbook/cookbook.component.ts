@@ -88,7 +88,6 @@ export class CookbookComponent implements OnInit{
     this.restService.getRecipes().subscribe({
       next: (list: RecipeDto[]) => {
         this.recipeBook.set(list);
-        //this.recipeBookAux.set(list);
         console.log(this.recipeBook())
       },
       error: err => console.error('Failed to load recipes', err)

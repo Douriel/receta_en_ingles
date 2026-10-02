@@ -162,11 +162,12 @@ export class FormRecipeComponent implements OnInit {
     //console.log(found);
   }
 
-  deleteRow(index: number) {
+  deleteRowIng(index: number) {
     this.recipeForm.ingredients().value.update(value => value.filter((value, i) => i != index));
   }
-  
-
+  deleteRowTag(index: number) {
+    this.recipeForm.tags().value.update(value => value.filter((value, i) => i != index));
+  }
 
   search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
 		text$.pipe(

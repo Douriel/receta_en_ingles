@@ -37,13 +37,11 @@
         @for (ingredient of recipeForm.ingredients; track ingredient) {
             <div>
                 <input id="recipeIng"  type="text" [formField]="ingredient.name" [ngbTypeahead]="search">
-                <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
+                <button type="button" class="btn btn-outline-secondary" (click)="deleteRowIng($index)">
                 <i class="bi bi-dash"></i>
             </button> 
             </div>
         }
-
-        
         <div>
             <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
                 <i class="bi bi-plus-lg"></i>
@@ -62,7 +60,7 @@
         @for (tag of recipeForm.tags; track tag) {
             <div>
                 <input id="tags"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
-                <button type="button" class="btn btn-outline-secondary" (click)="deleteRow($index)">
+                <button type="button" class="btn btn-outline-secondary" (click)="deleteRowTag($index)">
                 <i class="bi bi-dash"></i>
             </button> 
             </div>
