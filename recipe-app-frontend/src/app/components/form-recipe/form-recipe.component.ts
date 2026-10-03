@@ -7,6 +7,8 @@ import { debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFu
 import { RestService } from '../../services/rest.service';
 import { TagDto } from '../../data/tag.dto';
 import { nameExists } from '../../utils/validation.utils';
+import { QuillModule } from 'ngx-quill'
+
 
 interface Formdata{
   name: string;
@@ -20,7 +22,7 @@ interface Formdata{
 
 @Component({
   selector: 'app-form-recipe',
-  imports: [FormField, NgbTypeahead],
+  imports: [FormField, NgbTypeahead, QuillModule],
   templateUrl: './form-recipe.component.html',
   styleUrl: './form-recipe.component.scss',
 })

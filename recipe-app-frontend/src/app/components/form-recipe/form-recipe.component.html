@@ -32,6 +32,9 @@
             <textarea id="recipeSteps" type="text" [formField]="recipeForm.steps"></textarea>
         </div>
         <div>
+            <quill-editor [formField]="recipeForm.steps"></quill-editor>
+        </div>
+        <div>
             <label for="recipeIng">List of ingredients:</label>
         </div>
         @for (ingredient of recipeForm.ingredients; track ingredient) {

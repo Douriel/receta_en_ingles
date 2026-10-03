@@ -1,13 +1,11 @@
 
 
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-sm">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/">
         <img src="images/Empty Fridge.png"/>
     </a>
     <button class="navbar-toggler" type="button" (click)="collapse.toggle()" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-
-
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="navbar-collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">

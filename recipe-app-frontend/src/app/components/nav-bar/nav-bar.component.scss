@@ -8,3 +8,13 @@ img{
   margin-right: 2rem;
   margin-bottom: 10px;
 }
+
+
+
+.navbar-collapse {
+  flex-grow: 1;
+  flex-basis: 100%;
+  // For always expanded or extra full navbars, ensure content aligns itself
+  // properly vertically. Can be easily overridden with flex utilities.
+  align-items: center;
+}

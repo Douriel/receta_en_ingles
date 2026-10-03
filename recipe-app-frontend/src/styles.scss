@@ -17,6 +17,10 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 @import '@ng-select/ng-select/themes/default.theme.css';
 
 
+//@import 'quill/dist/quill.bubble.css';
+// or
+@import 'quill/dist/quill.snow.css';
+
 html, body{
     height: 100%;
     font-family: "Pixelify Sans";
@@ -28,4 +32,9 @@ form{
         border-color: $danger;
         background-color: tint-color($danger, 88%);
     }
+}
+
+quill-editor{
+    display: flex !important;
+    flex-direction: column;
 }

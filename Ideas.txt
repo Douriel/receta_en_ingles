@@ -1,8 +1,19 @@
 
+Rich text editor
+Añadir boton de edicion en el propio modal y sino que quedo to en readonly.
+corregir el nav-bar colapse
 
+En los modales la seccion de Ing y tag que la lable sea el propio boton de + para ahorrar espacio.
 
-Lista de compra
+Upload fotos
 
+Lista de compra.
+Poder enviar la lista de compra a tu movil o correo o exportarlo.
+
+que las etiquetas sean literalmente etiquetas:
+    - poder coger las etiquetas y tirarlas a la basura.
+    
+Que recetas sea un libro de recetas
 
 
 
@@ -15,6 +26,7 @@ Ordenar las listas.
 validador de nombre (Si ya esta en la lista no se pueda llenar).
 Buscador de ingredientes
 Cambiar en el form de recipe el campo elaboration time por un reloj.
+corregir el nav-bar, las paginas desaparecen muy pronto.
 
 
 

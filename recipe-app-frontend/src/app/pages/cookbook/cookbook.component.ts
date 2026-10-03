@@ -106,7 +106,7 @@ export class CookbookComponent implements OnInit{
     });
   }
   protected createRecipe(): void {
-    const modalRef = this.ngbModal.open(FormRecipeComponent);
+    const modalRef = this.ngbModal.open(FormRecipeComponent, {size:"lg"});
     modalRef.closed.subscribe({
       next: (recDto : RecipeDto) => {
         this.restService.postRecipe(recDto).subscribe({
