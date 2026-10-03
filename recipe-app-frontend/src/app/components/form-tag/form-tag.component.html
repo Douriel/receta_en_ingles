@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{modalTitle()}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<form>
+    <div class="modal-body">
+        <div>
+            <label for="tagName">Name</label>
+            <input id="tagName" type="text" [formField]="tagForm.name">
+        </div>`
+    </div>
+    <div class="modal-footer">
+        @if(editFlag){
+            <button type="button" class="btn btn-outline-danger" (click)="deleteTag()">Delete</button>
+        }
+        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!tagForm().valid()">Save</button>
+    </div>
+</form>        

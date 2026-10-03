@@ -50,7 +50,7 @@ export class CookbookComponent implements OnInit{
   
   protected readonly recipeBookAux = computed<RecipeDto[]>(() => {
     return this.recipeBook().filter(recipe => {
-      if(!recipe.name.toLowerCase().includes(this.searchString().toLowerCase()))
+      if(!recipe.name.toLocaleLowerCase().includes(this.searchString().toLocaleLowerCase()))
         return false;
       if(!this._filterTags(recipe.tags.map(tag => tag.name), this.filterTags()))
         return false;
@@ -134,7 +134,6 @@ export class CookbookComponent implements OnInit{
             error: err => console.error('Recipe could not be deleted', err)
           })
         } else{
-          console.log(result);
           this.restService.updateRecipe(result).subscribe({
             next: () => {
               this.retriveRecipeList();

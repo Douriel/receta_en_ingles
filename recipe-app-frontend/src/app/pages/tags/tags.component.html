@@ -15,12 +15,11 @@
 		</thead>
 		<tbody>
 			@for (tag of tagsAux(); track tag.name; let i = $index) {
-				<tr>
-					<!-- <th scope="row">{{ i + 1 }}</th> -->
+				<tr (click)="editTag(tag)">
 					<td> {{ tag.name }} </td>
 				</tr>
 			}
 		</tbody>
 	</table>
-	<button (click)="createTag()" type="button">Add a recipe</button>
+	<button (click)="createTag()" type="button">New tag</button>
 </div>
