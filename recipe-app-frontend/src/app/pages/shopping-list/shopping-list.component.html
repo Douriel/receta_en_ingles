@@ -1,1 +1,31 @@
 <nav-bar/>
+<div class="p-4">
+	<div class="title-search">
+		<h1>Shopping List manager</h1>
+		<div class="input-group">
+			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span> 
+			<input type="text" class="form-control" placeholder="Search for recipes" (input)="searchElement($event.target.value)">
+		</div>
+	</div>
+
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Short description</th>
+			</tr>
+		</thead>
+		<tbody>
+            <!--
+			@for (ShList of shListsAux(); track ShList.name; let i = $index) {
+				<tr (click)="editShList(ShList)">
+					<td> {{ ShList.name }} </td>
+					<td>{{ ShList.description }}</td>
+				</tr>
+			} 
+            -->
+		</tbody>
+	</table>
+	<button (click)="createShList()" type="button">Create Shipping List</button>
+</div>

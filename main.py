@@ -280,7 +280,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
 
 ## CRUD methods related with shoppingList
 
-# Create a new shopping list
+# get a new shopping list
 @app.get("/shoppingList")
 def get_shopping_lists():
     session = Session(engine)
@@ -293,6 +293,20 @@ def get_shopping_lists():
         shopping_list_list.append(ShoppingListDto.from_model(shopping_list))
     session.close()
     return JSONResponse(content=jsonable_encoder(shopping_list_list))
+
+# Get shopping list names:
+@app.get("/shoppingList/names")
+def get_shopping_lists_names():
+    session = Session(engine)
+
+    shopping_lists_names = []
+
+    stmt = session.scalars(select(ShoppingListModel.name).order_by(ShoppingListModel.name))
+
+    shopping_lists_names.extend(stmt)
+    
+    session.close()
+    return JSONResponse(content=jsonable_encoder(shopping_lists_names))
 
 # Get an specific shopping list
 @app.get("/shoppingList/{shopping_list_uuid}")

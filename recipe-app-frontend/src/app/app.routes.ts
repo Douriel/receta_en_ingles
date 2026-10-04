@@ -25,11 +25,11 @@ export const routes: Routes = [
     {
         path: 'tags',
         component: TagsComponent,
-        title: 'Tags for your recipes'
+        title: 'Tags manager'
     },
     {
         path: 'shopping-list',
         component: ShoppingListComponent,
-        title: 'Do not forget the Fairy again'
+        title: 'Shopping List'
     } 
 ];

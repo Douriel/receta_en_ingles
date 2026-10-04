@@ -4,6 +4,7 @@ import { IngredientDto } from '../data/ingredient.dto';
 import { Observable } from 'rxjs';
 import { RecipeDto } from '../data/recipe.dto';
 import { TagDto } from '../data/tag.dto';
+import { ShoppingListDto } from '../data/shoppingList.dto';
 
 @Injectable({providedIn: 'root'})
 export class RestService {
@@ -66,12 +67,33 @@ export class RestService {
         return this.httpClient.post<any>('http://127.0.0.1:8000/tag', newTag);
     }
 
-    // Upadate is missing
     public updateTag(updatedTag: TagDto){
         return this.httpClient.put<any>(`http://127.0.0.1:8000/tag/${updatedTag.uuid}`, updatedTag);
     }
 
     public deleteTag(uuidTag: string){
         return this.httpClient.delete<any>(`http://127.0.0.1:8000/tag/${uuidTag}`);
+    }
+
+    // Services from Shopping List
+        public getShoppingLists(): Observable<ShoppingListDto[]>{
+        return this.httpClient.get<ShoppingListDto[]>('http://127.0.0.1:8000/shoppingList');
+    }
+
+    // Not implemented in the backend
+    public getShoppingListsNames(): Observable<string[]> {
+        return this.httpClient.get<string[]>('http://127.0.0.1:8000/shoppingList/names');
+    }    
+
+    public postShoppingList(newShoppingList: ShoppingListDto) {
+      return this.httpClient.post<any>('http://127.0.0.1:8000/shoppingList', newShoppingList)
+    }
+
+    public updateShoppingList(updatedShoppingList: ShoppingListDto){
+        return this.httpClient.put<any>(`http://127.0.0.1:8000/shoppingList/${updatedShoppingList.uuid}`, updatedShoppingList);
+    }
+
+    public deleteShoppingList(deletedShoppingListUUID: string){
+        return this.httpClient.delete<any>(`http://127.0.0.1:8000/shoppingList/${deletedShoppingListUUID}`)
     }
 }
