@@ -88,7 +88,6 @@ export class CookbookComponent implements OnInit{
     this.restService.getRecipes().subscribe({
       next: (list: RecipeDto[]) => {
         this.recipeBook.set(list);
-        console.log(this.recipeBook())
       },
       error: err => console.error('Failed to load recipes', err)
     })
@@ -120,7 +119,7 @@ export class CookbookComponent implements OnInit{
   }
 
   protected editRecipe(recipeEdit: RecipeDto): void{
-    const modalRef = this.ngbModal.open(FormRecipeComponent);
+    const modalRef = this.ngbModal.open(FormRecipeComponent, {size:"lg"});
     const modal: FormRecipeComponent = modalRef.componentInstance;
     modal.setRecipe(recipeEdit);
 

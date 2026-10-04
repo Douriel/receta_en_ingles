@@ -106,14 +106,12 @@ export class FormRecipeComponent implements OnInit {
   protected readonly modalTitle = signal("Write a new recipe");
 
   protected debugging(){
-    console.log(this.recipeModel())
+    //console.log(this.recipeModel())
   }
 
   protected submitForm(){
     if(this.recipeForm().valid()){
       const data = this.recipeModel();
-      console.log("Submiting the form")
-      console.log(data.hours*60+data.mins)
       const recipeDto = new RecipeDto({
         uuid: this.uuid,
         name: data.name,

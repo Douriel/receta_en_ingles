@@ -37,4 +37,6 @@ form{
 quill-editor{
     display: flex !important;
     flex-direction: column;
+    width: 100%;
+    min-height: 8rem;
 }

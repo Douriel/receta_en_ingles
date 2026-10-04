@@ -8,10 +8,8 @@
             <label for="recipeName">Name</label>
             <input id="recipeName" type="text" [formField]="recipeForm.name">
         </div>
-
-        <div>
-            <label for="recipeTime">Elaboration time</label>
             <div class="time-picker">
+                <label for="recipeTime">Elaboration time</label>
                 <div class="input-group mb-3">
                     <input type="number" class="form-control" placeholder="00" aria-label="HH" aria-describedby="basic-addon2" [formField]="recipeForm.hours">
                     <span class="input-group-text">HH</span>
@@ -21,18 +19,15 @@
                     <span class="input-group-text">mm</span>
                 </div>
             </div>
-        </div>
-
         <div>
             <label for="recipeDescription">Description</label>
             <input id="recipeDescription" type="text" [formField]="recipeForm.description">
         </div>
-        <div class="steps">
+        <div>
             <label for="recipeSteps">Steps</label>
-            <textarea id="recipeSteps" type="text" [formField]="recipeForm.steps"></textarea>
         </div>
         <div>
-            <quill-editor [formField]="recipeForm.steps"></quill-editor>
+            <quill-editor [formField]="recipeForm.steps" id="recipeSteps" ></quill-editor>
         </div>
         <div>
             <label for="recipeIng">List of ingredients:</label>

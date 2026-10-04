@@ -31,13 +31,15 @@ const toolbarOptions = [
 */
 
 const toolbarOptions = [
+
+  [{ 'header': [1, 2, 3, false] }],
+
   ['bold', 'italic', 'underline'],        // toggled buttons
   ['link'],
 
   [{ 'list': 'ordered'}, { 'list': 'bullet' }],
   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
 
-  [{ 'header': [1, 2, 3, false] }],
 
   [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
 
@@ -60,7 +62,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideQuillConfig({
       modules: {
-        syntax: true,
+        syntax: false,
         toolbar: toolbarOptions
       }
     })

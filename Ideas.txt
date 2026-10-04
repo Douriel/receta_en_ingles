@@ -1,5 +1,5 @@
 
-Rich text editor
+selector de cuantos ingredientes recetas o tags se ven en la tabla, por ejemplo 10/20/30/50/100
 Añadir boton de edicion en el propio modal y sino que quedo to en readonly.
 corregir el nav-bar colapse
 
@@ -27,6 +27,8 @@ validador de nombre (Si ya esta en la lista no se pueda llenar).
 Buscador de ingredientes
 Cambiar en el form de recipe el campo elaboration time por un reloj.
 corregir el nav-bar, las paginas desaparecen muy pronto.
+Rich text editor
+
 
 
 
