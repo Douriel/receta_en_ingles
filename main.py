@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
 
 
-from bbdd_v2 import IngredientModel, RecipeModel, ShoppingListModel, TagModel
+from bbdd_v2 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
@@ -323,29 +323,49 @@ def get_shopping_list(shopping_list_uuid):
 # Create a new shopping list
 @app.post("/shoppingList")
 def create_shopping_list(shopping_list:ShoppingListDto):
-    session = Session(engine)
+    with Session(engine) as session:
 
-    stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shopping_list.name)).one_or_none()
+        # First I need to check what is if the list has been created
+        stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shopping_list.name)).one_or_none()
+        if(stmt is not None):
+            return JSONResponse(status_code=400, content="There is shopping list with the case name already created")
 
-    if(stmt is not None):
-        return JSONResponse(status_code=400, content="There is shopping list with the same name")
+        # Middleman object
+        shopping_list_associations = []
 
-    ingredients_model:List[IngredientModel] = []
+        for ingredient_shopping_list_dto in shopping_list.ingredients:
+            ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
 
-    for ingredient_dto in shopping_list.ingredients:
-        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
+            if(ingredient is None):
+                ingredient = IngredientModel(
+                    uuid=str(uuid4()),
+                    name=ingredient_shopping_list_dto.ingredient.name, 
+                    quantity=0, 
+                    unit=ingredient_shopping_list_dto.ingredient.unit, 
+                    notes=ingredient_shopping_list_dto.ingredient.notes                    
+            )
+            else: 
+                ingredient_shopping_list_dto.unit= ingredient.unit
 
-        if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
-        else:
-            ingredients_model.append(stmt2)
+            assoc = IngredientShoppingListModel(
+                ingredient=ingredient,
+                unit=ingredient_shopping_list_dto.unit,
+                quantity=ingredient_shopping_list_dto.quantity
+            )
 
-    shopping_list_model = ShoppingListModel(uuid=str(uuid4()), name=shopping_list.name, quantity=shopping_list.quantity, unit=shopping_list.unit, notes=shopping_list.notes, ingredients=ingredients_model)
+            shopping_list_associations.append(assoc)
 
-    session.add(shopping_list_model)
-    session.commit()
-    session.close()
-    return JSONResponse(status_code=200, content="Shopping List created")
+        shopping_list_model = ShoppingListModel(
+            uuid=str(uuid4()), 
+            name=shopping_list.name, 
+            notes=shopping_list.notes, 
+            ingredients=shopping_list_associations # Pass the middleman objects here!
+        )
+
+        session.add(shopping_list_model)
+        session.commit()
+
+        return JSONResponse(status_code=200, content="Shopping List created")
 
 # Delete a shopping List
 @app.delete("/shoppingList/{shopping_list_uuid}")
@@ -355,7 +375,7 @@ def delete_shopping_list(shopping_list_uuid):
     stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
 
     if(stmt is None):
-        return JSONResponse(status_code=400, content="Recipe not found")
+        return JSONResponse(status_code=400, content="Shopping List not found")
     
     session.delete(stmt)
     session.commit()
