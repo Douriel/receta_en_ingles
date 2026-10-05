@@ -408,18 +408,18 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
     stmt.notes = shopping_list_dto.notes
 
 
-    ingredients_model:List[IngredientModel] = []
-
-
-    for ingredient_dto in shopping_list_dto.ingredients:
-            stmt2 = session.scalar(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name))
+    ingredientShoppingListModel:List[IngredientShoppingListModel] = []
+    
+    
+    for ingredient_shopping_list_dto in shopping_list_dto.ingredients:
+            stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
     
             if(stmt2 is None):
-                ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
+                ingredient_shopping_list_dto.ingredient.append(IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes))
             else:
-                ingredients_model.append(stmt2)
+                ingredient_shopping_list_dto.ingredient.append(stmt2)
 
-    stmt.ingredients = ingredients_model
+    stmt.ingredients = ingredient_shopping_list_dto
     session.commit()
     session.close()
     return JSONResponse(status_code=200, content="Recipe updated")

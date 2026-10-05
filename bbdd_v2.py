@@ -29,7 +29,6 @@ shoppingList_ingredient = Table(
 )
 """
 
-######################### Por que tengo puestas las comillas dobles en las listas??????
 class IngredientShoppingListModel(Base):
     __tablename__ = "ingredient_shoppingList"
     ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id"), primary_key=True)
