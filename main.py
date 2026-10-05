@@ -78,6 +78,7 @@ def get_ingredient(ingredient_uuid):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
 
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Ingredient not found")
     session.close()
     return JSONResponse(content=jsonable_encoder(IngredientDto.from_model(stmt)))
@@ -90,6 +91,7 @@ def add_ingredient(ingredient:IngredientDto):
     # First thing is to check if this item is listed in the DB
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient.name)).one_or_none()
     if(stmt is not None):
+        session.close()
         return JSONResponse(status_code=400, content="Ingredient already exist")
     
     ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient.name, quantity=ingredient.quantity, unit=ingredient.unit, notes= ingredient.notes)
@@ -107,6 +109,7 @@ def delete_ingredient(ingredient_uuid):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
     # if not found it cannot be deleted
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Ingredient not found")
     session.delete(stmt)
     session.commit()
@@ -122,6 +125,7 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
     stmt = session.scalars(select(IngredientModel).where(IngredientModel.uuid == ingredient_uuid)).one_or_none()
     # if not found the ingrediet cannot be updatad
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Ingredient not found")
     
     stmt.name = ingredient.name
@@ -174,6 +178,7 @@ def get_recipe(recipe_uuid):
 
     #Check if it exist on the DB
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Recipe not found")
     session.close()
     return JSONResponse(content=jsonable_encoder(RecipeDto.from_model(stmt)))
@@ -187,6 +192,7 @@ def create_recipe(recipe:RecipeDto):
     stmt = session.scalars(select(RecipeModel).where(RecipeModel.name == recipe.name)).one_or_none()
 
     if(stmt is not None):
+        session.close()
         return JSONResponse(status_code=400, content="The recipe already exist")
     
     ingredients_model:List[IngredientModel] = []
@@ -226,6 +232,7 @@ def delete_recipe(recipe_uuid):
     stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
 
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Recipe not found")
     
     session.delete(stmt)
@@ -242,6 +249,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
     stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
 
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Recipe not found")
     
     
@@ -266,6 +274,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
         stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
 
         if(stmt2 is None):
+            session.close()
             tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
         else:
             tags_model.append(stmt2)    
@@ -314,11 +323,14 @@ def get_shopping_list(shopping_list_uuid):
     session = Session(engine)
 
     stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid)).one_or_none()
+    print(type(stmt))
 
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Shopping List not found")
+    lazy_aux = ShoppingListDto.from_model(stmt)
     session.close()
-    return JSONResponse(content=jsonable_encoder(ShoppingListDto.from_model(stmt)))
+    return JSONResponse(content=jsonable_encoder(lazy_aux))
 
 # Create a new shopping list
 @app.post("/shoppingList")
@@ -328,6 +340,7 @@ def create_shopping_list(shopping_list:ShoppingListDto):
         # First I need to check what is if the list has been created
         stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shopping_list.name)).one_or_none()
         if(stmt is not None):
+            session.close()
             return JSONResponse(status_code=400, content="There is shopping list with the case name already created")
 
         # Middleman object
@@ -364,7 +377,6 @@ def create_shopping_list(shopping_list:ShoppingListDto):
 
         session.add(shopping_list_model)
         session.commit()
-
         return JSONResponse(status_code=200, content="Shopping List created")
 
 # Delete a shopping List
@@ -394,8 +406,7 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
     
     stmt.name = shopping_list_dto.name
     stmt.notes = shopping_list_dto.notes
-    stmt.quantity = shopping_list_dto.quantity
-    stmt.unit = shopping_list_dto.unit
+
 
     ingredients_model:List[IngredientModel] = []
 
@@ -425,6 +436,7 @@ def create_tag(tag_dto : Tag_dto):
     stmt = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
 
     if(stmt is not None):
+        session.close()
         return JSONResponse(status_code=400, content="This tag already exist.")
 
     tagModel = TagModel(uuid=str(uuid4()), name=tag_dto.name)
@@ -471,6 +483,7 @@ def get_tag(tag_uuid):
     stmt = session.scalars(select(TagModel).where(TagModel.uuid==tag_uuid)).one_or_none()
 
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Tag not found")
     session.close()
     return JSONResponse(status_code=200, content=jsonable_encoder(Tag_dto.from_model(stmt)))
@@ -485,6 +498,7 @@ def update_tag(tag_uuid, tag:Tag_dto):
     stmt = session.scalars(select(TagModel).where(TagModel.uuid == tag_uuid)).one_or_none()
     # if not found the tag cannot be updatad
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Tag not found")
     
     stmt.name = tag.name
@@ -499,6 +513,7 @@ def delete_tag(tag_uuid):
 
     stmt = session.scalars(select(TagModel).where(TagModel.uuid==tag_uuid)).one_or_none()
     if(stmt is None):
+        session.close()
         return JSONResponse(status_code=400, content="Tag not found")
     session.delete(stmt)
     session.commit()

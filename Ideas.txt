@@ -2,7 +2,7 @@
 selector de cuantos ingredientes recetas o tags se ven en la tabla, por ejemplo 10/20/30/50/100
 Añadir boton de edicion en el propio modal y sino que quedo to en readonly.
 corregir el nav-bar colapse
-
+Cambiar session.close() por with Session(engine)
 En los modales la seccion de Ing y tag que la lable sea el propio boton de + para ahorrar espacio.
 
 Upload fotos
