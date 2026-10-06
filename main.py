@@ -397,32 +397,27 @@ def delete_shopping_list(shopping_list_uuid):
 # Update a shopping list
 @app.put("/shoppingList/{shopping_list_uuid}")
 def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
-    session = Session(engine)
+    with Session(engine) as session:
+        print("holaasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
 
-    stmt = session.scalar(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid))
+        if(stmt is None):
+            return JSONResponse(status_code=400, content="Recipe not found")
 
-    if(stmt is None):
-        return JSONResponse(status_code=400, content="Recipe not found")
-    
-    stmt.name = shopping_list_dto.name
-    stmt.notes = shopping_list_dto.notes
+        stmt.name = shopping_list_dto.name
+        stmt.notes = shopping_list_dto.notes
 
+        ingredientShoppingListModel:List[IngredientShoppingListModel] = []
+        
+        for ingredient_shopping_list_dto in shopping_list_dto.ingredients:
+                ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
+                if(ingredient is None):
+                    ingredient = IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes)
+                ingredientShoppingListModel.append(IngredientShoppingListModel(unit=ingredient_shopping_list_dto.unit, quantity=ingredient_shopping_list_dto.quantity, ingredient=ingredient))
 
-    ingredientShoppingListModel:List[IngredientShoppingListModel] = []
-    
-    
-    for ingredient_shopping_list_dto in shopping_list_dto.ingredients:
-            stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
-    
-            if(stmt2 is None):
-                ingredient_shopping_list_dto.ingredient.append(IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes))
-            else:
-                ingredient_shopping_list_dto.ingredient.append(stmt2)
-
-    stmt.ingredients = ingredient_shopping_list_dto
-    session.commit()
-    session.close()
-    return JSONResponse(status_code=200, content="Recipe updated")
+        stmt.ingredients = ingredientShoppingListModel
+        session.commit()
+        return JSONResponse(status_code=200, content="Recipe updated")
 
 
 

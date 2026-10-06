@@ -6,14 +6,14 @@ from uuid import UUID
 
 from bbdd_v2 import IngredientModel, ShoppingListModel, IngredientShoppingListModel
 
-class Ingredient_shopping_list_dto(BaseModel):
+class IngredientShoppingListDto(BaseModel):
     unit: str
     quantity: int
     ingredient : IngredientDto
 
     @staticmethod
     def from_model(ingredientShoppingListModel:IngredientShoppingListModel):
-        return Ingredient_shopping_list_dto(
+        return IngredientShoppingListDto(
                                             unit = ingredientShoppingListModel.unit,
                                             quantity = ingredientShoppingListModel.quantity,
                                             ingredient = IngredientDto.from_model(ingredientShoppingListModel.ingredient))
