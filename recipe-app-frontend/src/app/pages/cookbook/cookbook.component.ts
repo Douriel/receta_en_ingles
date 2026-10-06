@@ -64,6 +64,12 @@ export class CookbookComponent implements OnInit{
     })
   })
 
+  protected getRecipeTagsNames(recipe:RecipeDto): string {
+    let aux: string = "";
+    //recipe.tags.every(tag => aux.concat(this.tag.name))
+    return aux
+  }
+
   private _filterTags(recipeTags:string[], filterTags:string[]){
     //Devolvemos true si todos los tags del filtro estan en la receta.
     return filterTags.every(filterTag => recipeTags.includes(filterTag));
