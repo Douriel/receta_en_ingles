@@ -8,7 +8,7 @@ import { RecipeDto } from '../../data/recipe.dto';
 import { FormRecipeComponent } from '../../components/form-recipe/form-recipe.component';
 import { NgSelectComponent } from '@ng-select/ng-select'
 import { FormsModule } from '@angular/forms';
- 
+
 @Component({
   selector: 'app-cookbook',
   imports: [NavBarComponent, NgbCollapse, NgSelectComponent, NgxSliderModule, FormsModule],
@@ -37,7 +37,7 @@ export class CookbookComponent implements OnInit{
     minRange: 1,
     stepsArray: [
       {value:0, legend:"0m"},
-      {value:15, legend:"15m"}, 
+      {value:15, legend:"15m"},
       {value:30, legend:"30m"},
       {value:45, legend:"45m"},
       {value:60, legend:"1h"},
@@ -47,7 +47,7 @@ export class CookbookComponent implements OnInit{
       {value:241, legend: "Any"}
     ]
   }
-  
+
   protected readonly recipeBookAux = computed<RecipeDto[]>(() => {
     return this.recipeBook().filter(recipe => {
       if(!recipe.name.toLocaleLowerCase().includes(this.searchString().toLocaleLowerCase()))
@@ -59,16 +59,10 @@ export class CookbookComponent implements OnInit{
       if(recipe.time < this.value())
         return false;
       if(this.highValue() != 241 && recipe.time >= this.highValue())
-        return false;      
+        return false;
       return true;
     })
   })
-
-  protected getRecipeTagsNames(recipe:RecipeDto): string {
-    let aux: string = "";
-    //recipe.tags.every(tag => aux.concat(this.tag.name))
-    return aux
-  }
 
   private _filterTags(recipeTags:string[], filterTags:string[]){
     //Devolvemos true si todos los tags del filtro estan en la receta.
@@ -89,7 +83,7 @@ export class CookbookComponent implements OnInit{
     this.retrieveListIng();
     this.retrieveListTag();
   }
-  
+
   protected retriveRecipeList(): void{
     this.restService.getRecipes().subscribe({
       next: (list: RecipeDto[]) => {
@@ -103,7 +97,7 @@ export class CookbookComponent implements OnInit{
       next: (list: string[]) => this.ingNames.set(list),
       error: err => console.error('Failed to load ingredients', err)
     });
-  }  
+  }
   protected retrieveListTag(): void {
     this.restService.getTagNames().subscribe({
       next: (list: string[]) => this.tagNames.set(list),
@@ -153,7 +147,4 @@ export class CookbookComponent implements OnInit{
   protected searchElement(element: string): void {
     this.searchString.set(element);
   }
-
-  
-  
 }

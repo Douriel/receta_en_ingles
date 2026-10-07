@@ -3,7 +3,7 @@
 	<div class="title-search">
 		<h1>Recipe Book manager</h1>
 		<div class="input-group">
-			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span> 
+			<span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
 			<input type="text" class="form-control" placeholder="Search for recipes" (input)="searchElement($event.target.value)">
 			<button class="btn btn-outline-primary"(click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed()" ><i class="bi bi-filter"></i></button>
 		</div>
@@ -17,7 +17,7 @@
 				</div>
 				<div class="filter">
 					<ng-select multiple class="w-100" [items]="ingNames()" [(ngModel)]="filterIngs" placeholder="Filter by ingredients"/>
-				</div>				
+				</div>
 				<div class="mb-3">
 					<p>Filter by elaboration time:</p>
 					<ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"></ngx-slider>
@@ -31,6 +31,7 @@
 			<tr>
 				<th scope="col">Recipe name</th>
 				<th scope="col">Short description</th>
+				<th scope="col">Tags</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -39,7 +40,17 @@
 					<!-- <th scope="row">{{ i + 1 }}</th> -->
 					<td> {{ recipe.name }} </td>
 					<td>{{ recipe.description }}</td>
-					<td>{{ recipe.tags }}</td>
+					<td>
+					@for(tag of recipe.tags; track tag.name; let j = $index) {
+						<span class="me-1">
+							{{tag.name}}
+							@if(j < recipe.tags.length-1){
+								,
+							}
+						</span>
+
+					}
+					</td>
 				</tr>
 			}
 		</tbody>
