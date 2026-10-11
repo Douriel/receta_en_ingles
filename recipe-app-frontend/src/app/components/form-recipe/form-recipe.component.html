@@ -37,7 +37,7 @@
                 <input id="recipeIng"  type="text" [formField]="ingredient.name" [ngbTypeahead]="search">
                 <button type="button" class="btn btn-outline-secondary" (click)="deleteRowIng($index)">
                 <i class="bi bi-dash"></i>
-            </button> 
+            </button>
             </div>
         }
         <div>
@@ -60,7 +60,7 @@
                 <input id="tags"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
                 <button type="button" class="btn btn-outline-secondary" (click)="deleteRowTag($index)">
                 <i class="bi bi-dash"></i>
-            </button> 
+            </button>
             </div>
         }
 
@@ -69,15 +69,13 @@
                 <i class="bi bi-plus-lg"></i>
             </button>
         </div>
-        
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
-    
         @if(editFlag){
             <button type="button" class="btn btn-outline-danger" (click)="deleteRec()">Delete</button>
         }
-        
         <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!recipeForm().valid()">Save</button>
     </div>
 </form>
