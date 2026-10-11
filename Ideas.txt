@@ -12,7 +12,7 @@ Poder enviar la lista de compra a tu movil o correo o exportarlo.
 
 que las etiquetas sean literalmente etiquetas:
     - poder coger las etiquetas y tirarlas a la basura.
-    
+
 Que recetas sea un libro de recetas
 
 
