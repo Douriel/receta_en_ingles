@@ -1,4 +1,3 @@
-import { IngredientDto } from "./ingredient.dto";
 import { IngredientShoppongListDto } from "./IngredientShoppingList.dto";
 
 export class ShoppingListDto{

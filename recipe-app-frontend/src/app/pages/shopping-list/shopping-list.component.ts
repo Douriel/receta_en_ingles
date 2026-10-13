@@ -3,6 +3,8 @@ import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ShoppingListDto } from '../../data/shoppingList.dto';
+import { FormShListComponent } from '../../components/form-sh-list/form-sh-list.component';
+import { nameExists } from '../../utils/validation.utils';
 
 @Component({
   selector: 'app-shopping-list',
@@ -42,14 +44,45 @@ export class ShoppingListComponent implements OnInit{
   }
 
   createShList() {
-    throw new Error('Method not implemented.');
+    const modalRef = this.ngbModal.open(FormShListComponent, {size:"lg"});
+    modalRef.closed.subscribe({
+      next: (shList: ShoppingListDto) => {
+        this.restService.postShoppingList(shList).subscribe({
+          next: () => {
+            this.retrieveShoppingLists();
+          },
+          error: err => console.error('Shopping list could not be created', )
+        })
+      }
+    })
+  }
+  editShList(shList: ShoppingListDto) {
+    const modalRef = this.ngbModal.open(FormShListComponent, {size:"lg"});
+    const modal: FormShListComponent = modalRef.componentInstance;
+    modal.setShList(shList);
+
+    modalRef.closed.subscribe({
+      next: (result: ShoppingListDto | string) => {
+        if(typeof result === "string"){
+            this.restService.deleteShoppingList(result).subscribe({
+              next: () => {
+                this.retrieveShoppingLists();
+              },
+              error: err => console.error('Shopping List could not be deleted', err)
+            })
+        } else{
+          this.restService.updateShoppingList(result).subscribe({
+            next: () => {
+              this.retrieveShoppingLists();
+            },
+            error: err => console.error('Shopping List could not be updated')
+          })
+        }
+      }
+    })
   }
 
   protected searchElement(element: string): void {
     this.searchString.set(element);
-  }
-
-  editShList(_t16: any) {
-    throw new Error('Method not implemented.');
   }
 }
