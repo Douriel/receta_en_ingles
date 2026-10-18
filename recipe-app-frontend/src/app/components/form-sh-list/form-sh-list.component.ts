@@ -4,7 +4,7 @@ import { RestService } from '../../services/rest.service';
 import { ShoppingListDto } from '../../data/shoppingList.dto';
 import { IngredientShoppongListDto } from '../../data/IngredientShoppingList.dto';
 import { IngredientDto } from '../../data/ingredient.dto';
-import { applyEach, form, FormField, maxLength, required, SchemaPathTree } from '@angular/forms/signals';
+import { applyEach, form, FormField, maxLength, min, required, SchemaPathTree } from '@angular/forms/signals';
 import { nameExists } from '../../utils/validation.utils';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 
@@ -44,6 +44,7 @@ export class FormShListComponent implements OnInit {
 
   private itemSchema(ing: SchemaPathTree<IngredientShoppongListDto>) {
     required(ing.ingredient.name, {message: 'Item name is required'});
+    min(ing.quantity, 0);
   }
   protected readonly shListForm = form(this.shListModel, (schemaPath) => {
     required(schemaPath.name);

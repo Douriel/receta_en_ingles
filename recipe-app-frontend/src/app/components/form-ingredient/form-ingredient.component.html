@@ -6,7 +6,7 @@
     <div class="modal-body">
         <div>
             <label for="ingName">Name</label>
-            <input id="ingName" type="text" [formField]="ingForm.name">  
+            <input id="ingName" type="text" [formField]="ingForm.name">
         </div>
         <div>
             <label for="ingUnit">Unit</label>
@@ -18,7 +18,7 @@
                 <option value="Units">Units</option>
                 <option value="Docens">Docens</option>
                 <option value="Can">Cans</option>
-            </select>    
+            </select>
         </div>
         <div>
             <label for="ingQuantity">Quantity</label>
@@ -31,11 +31,11 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
-        
+
         @if(editFlag){
             <button type="button" class="btn btn-outline-danger" (click)="deleteIng()">Delete</button>
         }
-        
+
         <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!ingForm().valid()">Save</button>
     </div>
 </form>

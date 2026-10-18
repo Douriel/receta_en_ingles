@@ -353,11 +353,12 @@ def create_shopping_list(shopping_list:ShoppingListDto):
                     uuid=str(uuid4()),
                     name=ingredient_shopping_list_dto.ingredient.name,
                     quantity=0,
-                    unit=ingredient_shopping_list_dto.ingredient.unit,
+                    unit=ingredient_shopping_list_dto.unit,
                     notes=ingredient_shopping_list_dto.ingredient.notes
             )
-            else:
-                ingredient_shopping_list_dto.unit= ingredient.unit
+            #else:
+                ####### How the units are treated will be a problem in the future for addition or substraction of quantities.
+                #ingredient_shopping_list_dto.unit= ingredient.unit
 
             assoc = IngredientShoppingListModel(
                 ingredient=ingredient,

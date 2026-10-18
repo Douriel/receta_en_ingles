@@ -35,13 +35,13 @@
         @for (ingredient of recipeForm.ingredients; track ingredient) {
             <div>
                 <input id="recipeIng"  type="text" [formField]="ingredient.name" [ngbTypeahead]="search">
-                <button type="button" class="btn btn-outline-secondary" (click)="deleteRowIng($index)">
+                <button type="button" class="btn btn-outline-danger ms-2" (click)="deleteRowIng($index)">
                 <i class="bi bi-dash"></i>
             </button>
             </div>
         }
         <div>
-            <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
+            <button type="button" class="btn btn-outline-primary w-100" (click)="addIng()">
                 <i class="bi bi-plus-lg"></i>
             </button>
             <!--<button type="button" class="btn btn-outline-secondary" (click)="deleteLastRow()">
@@ -58,14 +58,14 @@
         @for (tag of recipeForm.tags; track tag) {
             <div>
                 <input id="tags"  type="text" [formField]="tag.name" [ngbTypeahead]="searchTags">
-                <button type="button" class="btn btn-outline-secondary" (click)="deleteRowTag($index)">
+                <button type="button" class="btn btn-outline-danger ms-2" (click)="deleteRowTag($index)">
                 <i class="bi bi-dash"></i>
             </button>
             </div>
         }
 
         <div>
-            <button type="button" class="btn btn-outline-secondary" (click)="addTag()">
+            <button type="button" class="btn btn-outline-primary w-100" (click)="addTag()">
                 <i class="bi bi-plus-lg"></i>
             </button>
         </div>
@@ -74,8 +74,8 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
         @if(editFlag){
-            <button type="button" class="btn btn-outline-danger" (click)="deleteRec()">Delete</button>
+            <button type="button" class="btn btn-danger" (click)="deleteRec()">Delete</button>
         }
-        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!recipeForm().valid()">Save</button>
+        <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!recipeForm().valid()">Save</button>
     </div>
 </form>

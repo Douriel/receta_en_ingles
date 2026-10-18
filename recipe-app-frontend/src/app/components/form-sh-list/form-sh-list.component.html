@@ -24,11 +24,11 @@
             </div>
             <div>
                 <label for="ingUnit">Units</label>
-                <input id="ingUnit"  type="text" [formField]="ingredient.ingredient.unit">
+                <input id="ingUnit"  type="text" [formField]="ingredient.unit">
             </div>
             <div>
                 <label for="ingQuan">Quantity</label>
-                <input id="ingQuan"  type="number" [formField]="ingredient.ingredient.quantity">
+                <input id="ingQuan"  type="number" [formField]="ingredient.quantity">
             </div>
         }
         <button type="button" class="btn btn-outline-primary" (click)="addIng()">
