@@ -13,33 +13,33 @@
             <input id="shListDescription" type="text" [formField]="shListForm.notes">
         </div>
     </div>
-    <div>
+    <div class="modal-body">
         <label for="shList">List of ingredients:</label>
-        <button type="button" class="btn btn-outline-secondary" (click)="addIng()">
+        @for (ingredient of shListForm.ingredients; track ingredient) {
+            <div class="name-delete">
+                <label for="ingName">Name</label>
+                <input id="ingName"  type="text" [formField]="ingredient.ingredient.name" [ngbTypeahead]="search">
+                <button type="button" class="btn btn-outline-danger ms-2 w-25" (click)="deleteRowIng($index)"><i class="bi bi-dash"></i>
+                </button>
+            </div>
+            <div>
+                <label for="ingUnit">Units</label>
+                <input id="ingUnit"  type="text" [formField]="ingredient.ingredient.unit">
+            </div>
+            <div>
+                <label for="ingQuan">Quantity</label>
+                <input id="ingQuan"  type="number" [formField]="ingredient.ingredient.quantity">
+            </div>
+        }
+        <button type="button" class="btn btn-outline-primary" (click)="addIng()">
             <i class="bi bi-plus-lg"></i>
         </button>
     </div>
-    @for (ingredient of shListForm.ingredients; track ingredient) {
-        <div>
-            <label for="ingName">Ingredient Name</label>
-            <input id="ingName"  type="text" [formField]="ingredient.ingredient.name">
-            <button type="button" class="btn btn-outline-secondary" (click)="deleteRowIng($index)"><i class="bi bi-dash"></i>
-            </button>
-        </div>
-        <div>
-            <label for="ingUnit">Units</label>
-            <input id="ingUnit"  type="text" [formField]="ingredient.ingredient.unit">
-        </div>
-        <div>
-            <label for="ingQuan">Quantity</label>
-            <input id="ingQuan"  type="number" [formField]="ingredient.ingredient.quantity">
-        </div>
-    }
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
         @if(editFlag){
-            <button type="button" class="btn btn-outline-danger" (click)="deleteShList()">Delete</button>
+            <button type="button" class="btn btn-danger" (click)="deleteShList()">Delete</button>
         }
-        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!shListForm().valid()">Save</button>
+        <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!shListForm().valid()">Save</button>
     </div>
 </form>

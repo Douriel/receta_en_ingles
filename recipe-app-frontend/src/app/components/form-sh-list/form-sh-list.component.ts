@@ -6,6 +6,7 @@ import { IngredientShoppongListDto } from '../../data/IngredientShoppingList.dto
 import { IngredientDto } from '../../data/ingredient.dto';
 import { applyEach, form, FormField, maxLength, required, SchemaPathTree } from '@angular/forms/signals';
 import { nameExists } from '../../utils/validation.utils';
+import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 
 
 interface Formdata{
@@ -122,4 +123,13 @@ export class FormShListComponent implements OnInit {
   deleteRowIng(index: number) {
     this.shListForm.ingredients().value.update(value => value.filter((value, i) => i != index));
   }
+
+    search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((term) =>
+        term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
+      ),
+    );
 }

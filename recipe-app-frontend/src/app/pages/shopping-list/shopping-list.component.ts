@@ -4,7 +4,6 @@ import { RestService } from '../../services/rest.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ShoppingListDto } from '../../data/shoppingList.dto';
 import { FormShListComponent } from '../../components/form-sh-list/form-sh-list.component';
-import { nameExists } from '../../utils/validation.utils';
 
 @Component({
   selector: 'app-shopping-list',
