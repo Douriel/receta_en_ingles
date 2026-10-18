@@ -39,7 +39,7 @@ export class FormIngredientComponent implements OnInit{
       next: (list: string[]) => {
         this.ingNames.set(list)
         if(this.editFlag)
-          this.ingNames.update(names => names.filter(name => this.ingModel().name !== name))       
+          this.ingNames.update(names => names.filter(name => this.ingModel().name !== name))
       },
       error: err => console.error('Failed to load ingredients names', err)
     });

@@ -3,7 +3,7 @@ import { applyEach, form, FormField, maxLength, min, required, SchemaPathTree } 
 import { NgbActiveModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { RecipeDto } from '../../data/recipe.dto';
 import { IngredientDto } from '../../data/ingredient.dto';
-import { debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 import { RestService } from '../../services/rest.service';
 import { TagDto } from '../../data/tag.dto';
 import { nameExists } from '../../utils/validation.utils';
@@ -76,7 +76,7 @@ export class FormRecipeComponent implements OnInit {
       next: (list: string[]) => {
         this.recipeNames.set(list)
         if(this.editFlag)
-          this.recipeNames.update(names => names.filter(name => this.recipeModel().name !== name)) 
+          this.recipeNames.update(names => names.filter(name => this.recipeModel().name !== name))
       },
       error: err => console.error('Failed to load recipe names', err)
     });

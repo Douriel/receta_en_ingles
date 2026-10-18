@@ -1,9 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { RestService } from '../../services/rest.service';
 import { ShoppingListDto } from '../../data/shoppingList.dto';
 import { IngredientShoppongListDto } from '../../data/IngredientShoppingList.dto';
 import { IngredientDto } from '../../data/ingredient.dto';
+import { applyEach, form, FormField, maxLength, required, SchemaPathTree } from '@angular/forms/signals';
+import { nameExists } from '../../utils/validation.utils';
+
 
 interface Formdata{
   name: string;
@@ -13,7 +16,7 @@ interface Formdata{
 
 @Component({
   selector: 'app-form-sh-list',
-  imports: [],
+  imports: [FormField, NgbTypeahead],
   templateUrl: './form-sh-list.component.html',
   styleUrl: './form-sh-list.component.scss',
 })
@@ -23,7 +26,7 @@ export class FormShListComponent implements OnInit {
   protected editFlag = false;
   private uuid: string = "";
   ingNames = signal<string[]>([]);
-  shoppingLists = signal<string[]>([]);
+  shoppingListsNames = signal<string[]>([]);
 
 
 
@@ -38,12 +41,49 @@ export class FormShListComponent implements OnInit {
     ingredients:[]
   })
 
+  private itemSchema(ing: SchemaPathTree<IngredientShoppongListDto>) {
+    required(ing.ingredient.name, {message: 'Item name is required'});
+  }
+  protected readonly shListForm = form(this.shListModel, (schemaPath) => {
+    required(schemaPath.name);
+    nameExists(schemaPath.name, this.shoppingListsNames, {message:"Recipe name is already taken"});
+    maxLength(schemaPath.name, 64);
+    applyEach(schemaPath.ingredients, this.itemSchema);
+  });
+
   ngOnInit(): void {
     this.retrieveListIng();
   }
 
+  protected submitForm(){
+    if(this.shListForm().valid()){
+      const shListDto = new ShoppingListDto(this.shListModel())
+      shListDto.uuid = this.uuid;
+      this.activeModal.close(shListDto)
+    }
+  }
+/*
+    protected submitForm(){
+    if(this.shListForm().valid()){
+      const data = this.shListModel();
+      const shListDto = new ShoppingListDto({
+        uuid: this.uuid,
+        name: data.name,
+        notes: data.notes,
+        ingredients: data.ingredients
+      })
+      console.log(shListDto)
+      this.activeModal.close(shListDto)
+    }
+  }
+    */
+
   protected deleteShList() {
     this.activeModal.close(this.uuid);
+  }
+
+  protected debugging(){
+    //console.log(this.recipeModel())
   }
 
   setShList(shList: ShoppingListDto){
@@ -67,12 +107,19 @@ export class FormShListComponent implements OnInit {
   protected retrieveShoppingLists(): void {
     this.restService.getShoppingListsNames().subscribe({
       next: (list: string[]) => {
-        this.shoppingLists.set(list)
+        this.shoppingListsNames.set(list)
         if(this.editFlag)
-          this.shoppingLists.update(names => names.filter(name => this.shListModel().name !== name))
+          this.shoppingListsNames.update(names => names.filter(name => this.shListModel().name !== name))
       },
       error: err => console.error('Failed to load shopping List names', err)
     });
   }
 
+  addIng() {
+    const ingShDto = new IngredientShoppongListDto();
+    this.shListForm.ingredients().value.update(value => [...value, ingShDto]);
+  }
+  deleteRowIng(index: number) {
+    this.shListForm.ingredients().value.update(value => value.filter((value, i) => i != index));
+  }
 }
