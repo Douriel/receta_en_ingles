@@ -1,6 +1,7 @@
 from typing import List
 
 
+from dto.unit import UnitDto
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -15,7 +16,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
 
 
-from bbdd_v2 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel
+from bbdd_v2 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel, UnitModel
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
@@ -322,7 +323,6 @@ def get_shopping_list(shopping_list_uuid):
     session = Session(engine)
 
     stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.uuid == shopping_list_uuid)).one_or_none()
-    print(type(stmt))
 
     if(stmt is None):
         session.close()
@@ -340,7 +340,7 @@ def create_shopping_list(shopping_list:ShoppingListDto):
         stmt = session.scalars(select(ShoppingListModel).where(ShoppingListModel.name == shopping_list.name)).one_or_none()
         if(stmt is not None):
             session.close()
-            return JSONResponse(status_code=400, content="There is shopping list with the case name already created")
+            return JSONResponse(status_code=400, content="There is shopping list with the same name already created")
 
         # Middleman object
         shopping_list_associations = []
@@ -513,3 +513,61 @@ def delete_tag(tag_uuid):
     session.commit()
     session.close()
     return JSONResponse(status_code=200, content="Tag deleted")
+
+# CRUD Unit
+# Create Unit
+@app.post("/unit")
+def create_unit(unitDto:UnitDto):
+    with Session(engine) as session:
+
+        unit = session.scalars(select(UnitModel).where(UnitDto.name) == unitDto.name)
+        if(unit is not None):
+            session.close()
+            return JSONResponse(status_code=400, content="There is a Unit name already created")
+
+        unit_model = UnitModel(uuid=str(uuid4()), name=unitDto.name)
+
+        session.add(unit_model)
+        session.commit()
+        return JSONResponse(status_code=200, content="Unit created")
+
+# Retrieve units
+@app.get("/unit")
+def get_units():
+    with Session(engine) as session:
+
+        units = select(UnitModel)
+
+        units_list = []
+
+        for unit in session.scalars(units):
+            units_list.append(UnitDto.from_model(unit))
+
+        session.commit()
+        return JSONResponse(status_code=200, content="Units retrieved")
+
+# Retrieve specific unit
+@app.get("/unit/{unit_uuid}")
+def get_unit(unit_uuid):
+    with Session(engine) as session:
+        unit = session.scalars(select(UnitModel).where(UnitModel.uuid == unit_uuid)).one_or_none()
+        if(unit is None):
+            session.close()
+            return JSONResponse(status_code=400, content="Unit not found")
+        lazy_aux = UnitModel.from_model(unit)
+        session.commit()
+        return JSONResponse(content=jsonable_encoder(lazy_aux))
+
+# Get Unit names:
+@app.get("/unit/names")
+def get_unit_names():
+    with Session(engine) as session:
+
+        unit_names = []
+
+        stmt = session.scalars(select(ShoppingListModel.name).order_by(ShoppingListModel.name))
+
+        unit_names.extend(stmt)
+
+        session.close()
+        return JSONResponse(content=jsonable_encoder(shopping_lists_names))

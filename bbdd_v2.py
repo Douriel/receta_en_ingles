@@ -36,7 +36,7 @@ class IngredientShoppingListModel(Base):
     ingredient: Mapped["IngredientModel"] = relationship(back_populates="shopping_list_associations")
     shopping_list: Mapped["ShoppingListModel"] = relationship(back_populates="ingredients")
     quantity : Mapped[int] = mapped_column(default=0)
-    unit : Mapped[str] = mapped_column(String(16)) 
+    unit : Mapped[str] = mapped_column(String(16))
 
 class IngredientModel(Base):
     __tablename__ = "ingredient"
@@ -50,7 +50,7 @@ class IngredientModel(Base):
     recipes: Mapped[List["RecipeModel"]] = relationship(
         back_populates="ingredients", secondary=recipe_ingredient
     )
-    
+
     shopping_list_associations: Mapped[List["IngredientShoppingListModel"]] = relationship(
         back_populates="ingredient", cascade="all, delete"
     )
@@ -68,7 +68,7 @@ class ShoppingListModel(Base):
     )
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r}, notes={self.notes!r}, ingredients={self.ingredients!r})"
-    
+
 class RecipeModel(Base):
     __tablename__ = "recipe"
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -98,6 +98,15 @@ class TagModel(Base):
     recipes: Mapped[List["RecipeModel"]] = relationship(
         back_populates="tags", secondary=recipe_tag
     )
+
+    def __repr__(self) -> str:
+        return f"id(id={self.id!r}, name={self.name!r})"
+
+class UnitModel(Base):
+    __tablename__ = "unit"
+    id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uuid : Mapped[str] = mapped_column(String(36), index=True)
+    name : Mapped[str] = mapped_column(String(64), unique=True)
 
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r})"
