@@ -409,10 +409,10 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
         ingredientShoppingListModel:List[IngredientShoppingListModel] = []
 
         for ingredient_shopping_list_dto in shopping_list_dto.ingredients:
-                ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
-                if(ingredient is None):
-                    ingredient = IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes)
-                ingredientShoppingListModel.append(IngredientShoppingListModel(unit=ingredient_shopping_list_dto.unit, quantity=ingredient_shopping_list_dto.quantity, ingredient=ingredient))
+            ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
+            if(ingredient is None):
+                ingredient = IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes)
+            ingredientShoppingListModel.append(IngredientShoppingListModel(unit=ingredient_shopping_list_dto.unit, quantity=ingredient_shopping_list_dto.quantity, ingredient=ingredient))
 
         stmt.ingredients = ingredientShoppingListModel
         session.commit()
@@ -519,14 +519,11 @@ def delete_tag(tag_uuid):
 @app.post("/unit")
 def create_unit(unitDto:UnitDto):
     with Session(engine) as session:
-
-        unit = session.scalars(select(UnitModel).where(UnitDto.name) == unitDto.name)
+        unit = session.scalars(select(UnitModel).where(UnitModel.name == unitDto.name)).one_or_none()
         if(unit is not None):
             session.close()
-            return JSONResponse(status_code=400, content="There is a Unit name already created")
-
+            return JSONResponse(status_code=400, content="There is a Unit with the same name")
         unit_model = UnitModel(uuid=str(uuid4()), name=unitDto.name)
-
         session.add(unit_model)
         session.commit()
         return JSONResponse(status_code=200, content="Unit created")
@@ -535,16 +532,21 @@ def create_unit(unitDto:UnitDto):
 @app.get("/unit")
 def get_units():
     with Session(engine) as session:
-
         units = select(UnitModel)
-
         units_list = []
-
         for unit in session.scalars(units):
             units_list.append(UnitDto.from_model(unit))
-
         session.commit()
-        return JSONResponse(status_code=200, content="Units retrieved")
+        return JSONResponse(content=jsonable_encoder(units_list))
+
+# Get Unit names:
+@app.get("/unit/names")
+def get_unit_names():
+    with Session(engine) as session:
+        unit_names = []
+        stmt = session.scalars(select(UnitModel.name).order_by(UnitModel.name))
+        unit_names.extend(stmt)
+        return JSONResponse(content=jsonable_encoder(unit_names))
 
 # Retrieve specific unit
 @app.get("/unit/{unit_uuid}")
@@ -554,20 +556,28 @@ def get_unit(unit_uuid):
         if(unit is None):
             session.close()
             return JSONResponse(status_code=400, content="Unit not found")
-        lazy_aux = UnitModel.from_model(unit)
-        session.commit()
+        lazy_aux = UnitDto.from_model(unit)
         return JSONResponse(content=jsonable_encoder(lazy_aux))
 
-# Get Unit names:
-@app.get("/unit/names")
-def get_unit_names():
+
+# Update Unit
+@app.put("/unit/{unit_uuid}")
+def update_unit(unit_uuid, unit_dto:UnitDto):
     with Session(engine) as session:
+        unit = session.scalar(select(UnitModel).where(UnitModel.uuid == unit_uuid))
+        if(unit is None):
+            return JSONResponse(status_code=400, content="Unit not found")
+        unit.name = unit_dto.name
+        session.commit()
+        return JSONResponse(status_code=200, content="Unit updated")
 
-        unit_names = []
-
-        stmt = session.scalars(select(ShoppingListModel.name).order_by(ShoppingListModel.name))
-
-        unit_names.extend(stmt)
-
-        session.close()
-        return JSONResponse(content=jsonable_encoder(shopping_lists_names))
+# Delete Unit
+@app.delete("/unit/{unit_uuid}")
+def delete_unit(unit_uuid):
+    with Session(engine) as session:
+        unit = session.scalar(select(UnitModel).where(UnitModel.uuid == unit_uuid))
+        if(unit is None):
+            return JSONResponse(status_code=400, content="Unit not found")
+        session.delete(unit)
+        session.commit()
+        return JSONResponse(status_code=200, content="Unit deleted succesfully")
