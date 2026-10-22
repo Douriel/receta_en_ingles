@@ -3,10 +3,10 @@ import { NgbActiveModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { RestService } from '../../services/rest.service';
 import { ShoppingListDto } from '../../data/shoppingList.dto';
 import { IngredientShoppongListDto } from '../../data/IngredientShoppingList.dto';
-import { IngredientDto } from '../../data/ingredient.dto';
 import { applyEach, form, FormField, maxLength, min, required, SchemaPathTree } from '@angular/forms/signals';
 import { nameExists } from '../../utils/validation.utils';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
+import { NgSelectComponent } from '@ng-select/ng-select'
 
 
 interface Formdata{
@@ -17,7 +17,7 @@ interface Formdata{
 
 @Component({
   selector: 'app-form-sh-list',
-  imports: [FormField, NgbTypeahead],
+  imports: [FormField, NgbTypeahead, NgSelectComponent],
   templateUrl: './form-sh-list.component.html',
   styleUrl: './form-sh-list.component.scss',
 })
@@ -27,6 +27,8 @@ export class FormShListComponent implements OnInit {
   protected editFlag = false;
   private uuid: string = "";
   ingNames = signal<string[]>([]);
+  unitNames = signal<string[]>([]);
+
   shoppingListsNames = signal<string[]>([]);
 
 
@@ -55,6 +57,7 @@ export class FormShListComponent implements OnInit {
 
   ngOnInit(): void {
     this.retrieveListIng();
+    this.retrieveListUnits();
   }
 
   protected submitForm(){
@@ -106,6 +109,13 @@ export class FormShListComponent implements OnInit {
     });
   }
 
+  protected retrieveListUnits(): void {
+    this.restService.getUnitsNames().subscribe({
+      next: (list: string[]) => this.unitNames.set(list),
+      error: err => console.error('Failed to load units names', err)
+    });
+  }
+
   protected retrieveShoppingLists(): void {
     this.restService.getShoppingListsNames().subscribe({
       next: (list: string[]) => {
@@ -125,12 +135,21 @@ export class FormShListComponent implements OnInit {
     this.shListForm.ingredients().value.update(value => value.filter((value, i) => i != index));
   }
 
-    search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map((term) =>
-        term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
-      ),
-    );
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+  text$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    map((term) =>
+      term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
+    ),
+  );
+
+  searchUnits: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+  text$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    map((term) =>
+      term.length < 2 ? [] : this.unitNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
+    ),
+  );
 }

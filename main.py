@@ -14,6 +14,7 @@ from dto.tag import Tag_dto
 
 from sqlalchemy.orm import Session
 from sqlalchemy import delete, select, create_engine, update
+from sqlalchemy.sql import collate
 
 
 from bbdd_v2 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel, UnitModel
@@ -47,7 +48,7 @@ app.add_middleware(
 def get_ingredents():
     session = Session(engine)
 
-    stmt = select(IngredientModel).order_by(IngredientModel.name)
+    stmt = select(IngredientModel).order_by(collate(IngredientModel.name, 'NOCASE'))
 
     ingredient_list = []
 
@@ -63,7 +64,7 @@ def get_ingredients_names():
 
     ingredients_names = []
 
-    stmt = session.scalars(select(IngredientModel.name).order_by(IngredientModel.name))
+    stmt = session.scalars(select(IngredientModel.name).order_by(collate(IngredientModel.name, 'NOCASE')))
 
     for name in stmt:
         ingredients_names.append(name)
@@ -147,7 +148,7 @@ def update_ingredient(ingredient_uuid, ingredient:IngredientDto):
 def get_recipes():
     session = Session(engine)
 
-    stmt = select(RecipeModel).order_by(RecipeModel.name)
+    stmt = select(RecipeModel).order_by(collate(RecipeModel.name, 'NOCASE'))
 
     recipe_list = []
 
@@ -163,7 +164,7 @@ def get_recipe_names():
 
     recipes_names = []
 
-    stmt = session.scalars(select(RecipeModel.name).order_by(RecipeModel.name))
+    stmt = session.scalars(select(RecipeModel.name).order_by(collate(RecipeModel.name, 'NOCASE')))
 
     for name in stmt:
         recipes_names.append(name)
@@ -310,7 +311,7 @@ def get_shopping_lists_names():
 
     shopping_lists_names = []
 
-    stmt = session.scalars(select(ShoppingListModel.name).order_by(ShoppingListModel.name))
+    stmt = session.scalars(select(ShoppingListModel.name).order_by(collate(ShoppingListModel.name, 'NOCASE')))
 
     shopping_lists_names.extend(stmt)
 
@@ -544,7 +545,7 @@ def get_units():
 def get_unit_names():
     with Session(engine) as session:
         unit_names = []
-        stmt = session.scalars(select(UnitModel.name).order_by(UnitModel.name))
+        stmt = session.scalars(select(UnitModel.name).order_by(collate(UnitModel.name, 'NOCASE')))
         unit_names.extend(stmt)
         return JSONResponse(content=jsonable_encoder(unit_names))
 

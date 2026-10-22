@@ -40,3 +40,10 @@ quill-editor{
     width: 100%;
     min-height: 8rem;
 }
+ng-select{
+    padding: 0 !important;
+}
+.ng-select-container{
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}

@@ -4,9 +4,9 @@
 </div>
 <form>
     <div class="modal-body">
-        <div>
-            <label for="shListName">Name</label>
-            <input id="shListName" type="text" [formField]="shListForm.name">
+        <div class="input-group">
+            <label class="input-group-text" for="shListName">Name</label>
+            <input class="form-control" id="shListName" type="text" [formField]="shListForm.name">
         </div>
         <div>
             <label for="shListDescription">Description</label>
@@ -22,9 +22,9 @@
                 <button type="button" class="btn btn-outline-danger ms-2 w-25" (click)="deleteRowIng($index)"><i class="bi bi-dash"></i>
                 </button>
             </div>
-            <div>
-                <label for="ingUnit">Units</label>
-                <input id="ingUnit"  type="text" [formField]="ingredient.unit">
+            <div class="input-group">
+                <label class="input-group-text" for="ingUnit">Units</label>
+                <ng-select class="form-control" id="ingUnit"  type="text" [formField]="ingredient.unit" [items]="unitNames()"/>
             </div>
             <div>
                 <label for="ingQuan">Quantity</label>

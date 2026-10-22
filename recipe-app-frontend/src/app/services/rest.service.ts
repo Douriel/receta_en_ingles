@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { RecipeDto } from '../data/recipe.dto';
 import { TagDto } from '../data/tag.dto';
 import { ShoppingListDto } from '../data/shoppingList.dto';
+import { UnitDto } from '../data/unit.dtp';
 
 @Injectable({providedIn: 'root'})
 export class RestService {
@@ -76,7 +77,7 @@ export class RestService {
     }
 
     // Services from Shopping List
-        public getShoppingLists(): Observable<ShoppingListDto[]>{
+    public getShoppingLists(): Observable<ShoppingListDto[]>{
         return this.httpClient.get<ShoppingListDto[]>('http://127.0.0.1:8000/shoppingList');
     }
 
@@ -94,5 +95,26 @@ export class RestService {
 
     public deleteShoppingList(deletedShoppingListUUID: string){
         return this.httpClient.delete<any>(`http://127.0.0.1:8000/shoppingList/${deletedShoppingListUUID}`)
+    }
+
+    // Services for Units
+    public getUnits(): Observable<UnitDto[]>{
+        return this.httpClient.get<UnitDto[]>('http://127.0.0.1:8000/unit');
+    }
+
+    public getUnitsNames(): Observable<string[]> {
+        return this.httpClient.get<string[]>('http://127.0.0.1:8000/unit/names');
+    }
+
+    public postUnit(newUnit: UnitDto) {
+      return this.httpClient.post<any>('http://127.0.0.1:8000/unit', newUnit)
+    }
+
+    public updateUnit(updatedUnit: UnitDto){
+        return this.httpClient.put<any>(`http://127.0.0.1:8000/unit/${updatedUnit.uuid}`, updatedUnit);
+    }
+
+    public deleteUnit(deletedUnitUUID: string){
+        return this.httpClient.delete<any>(`http://127.0.0.1:8000/unit/${deletedUnitUUID}`)
     }
 }
