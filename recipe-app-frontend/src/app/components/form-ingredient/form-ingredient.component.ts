@@ -5,6 +5,10 @@ import { IngredientDto } from '../../data/ingredient.dto';
 import { nameExists } from '../../utils/validation.utils';
 import { RestService } from '../../services/rest.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
+import { FormAddToCartComponent } from '../form-add-to-cart/form-add-to-cart.component';
+import { IngredientShoppongListDto } from '../../data/IngredientShoppingList.dto';
+import { ShoppingListDto } from '../../data/shoppingList.dto';
 
 interface Formdata{
   name: string;
@@ -28,7 +32,9 @@ export class FormIngredientComponent implements OnInit{
 
   constructor(
     protected readonly activeModal:NgbActiveModal,
-    private readonly restService: RestService
+    private readonly restService: RestService,
+    private readonly ngbModal: NgbModal
+
   ){}
 
   ngOnInit(): void {
@@ -93,6 +99,19 @@ export class FormIngredientComponent implements OnInit{
     this.editFlag = true;
     this.ingModel.set(ingEdit);
     this.modalTitle.set("Edit the ingredient");
+  }
+
+  protected addToCart(ingEdit: IngredientDto): void{
+    const modalRef = this.ngbModal.open(FormAddToCartComponent);
+    const modal: FormAddToCartComponent = modalRef.componentInstance;
+    modal.setModal(ingEdit);
+
+    modalRef.closed.subscribe({
+      next: (shList: ShoppingListDto) => {
+        this.restService.updateShoppingList(shList)
+      },
+      error: err => console.error('Shopping List not updated correcty')
+    })
   }
 }
 

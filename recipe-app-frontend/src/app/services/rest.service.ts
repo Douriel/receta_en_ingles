@@ -81,6 +81,10 @@ export class RestService {
         return this.httpClient.get<ShoppingListDto[]>('http://127.0.0.1:8000/shoppingList');
     }
 
+    public getShoppingList(): Observable<ShoppingListDto[]>{
+        return this.httpClient.get<ShoppingListDto[]>('http://127.0.0.1:8000/shoppingList');
+    }
+
     public getShoppingListsNames(): Observable<string[]> {
         return this.httpClient.get<string[]>('http://127.0.0.1:8000/shoppingList/names');
     }

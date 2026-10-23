@@ -21,7 +21,7 @@ export class StoreroomComponent implements OnInit {
     private readonly restService: RestService,
     private readonly ngbModal: NgbModal
     ) { }
-  
+
   ngOnInit(): void {
     this.retrieveList();
   }

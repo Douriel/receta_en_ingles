@@ -17,7 +17,7 @@
         <label for="shList">List of ingredients:</label>
         @for (ingredient of shListForm.ingredients; track ingredient) {
             <div class="input-group">
-                <label class="input-group-text">Name</label>
+                <label class="input-group-text" for="ingName">Name</label>
                 <input class="form-control" id="ingName"  type="text" [formField]="ingredient.ingredient.name" [ngbTypeahead]="search">
                 <button type="button" class="btn btn-outline-danger ms-2 w-25" (click)="deleteRowIng($index)"><i class="bi bi-dash"></i>
                 </button>

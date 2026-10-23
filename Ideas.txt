@@ -1,7 +1,7 @@
 
 
-Crear un diccionario de datos para Units. De esta manera podremos hacer operaciones con los ingredientes de addicion y substraccion.
 selector de cuantos ingredientes recetas o tags se ven en la tabla, por ejemplo 10/20/30/50/100
+Añadir tags a ingredientes (ejemplo, el pollo es carne, por lo tanto si una receta tiene pollo no debe filtrase como vegetariana)
 Añadir boton de edicion en el propio modal y sino que quedo to en readonly.
 corregir el nav-bar colapse
 Cambiar session.close() por with Session(engine)
@@ -32,6 +32,8 @@ Buscador de ingredientes
 Cambiar en el form de recipe el campo elaboration time por un reloj.
 corregir el nav-bar, las paginas desaparecen muy pronto.
 Rich text editor
+Crear un diccionario de datos para Units. De esta manera podremos hacer operaciones con los ingredientes de addicion y substraccion.
+
 
 
 
