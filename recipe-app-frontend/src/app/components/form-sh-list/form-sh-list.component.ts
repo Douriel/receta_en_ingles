@@ -143,13 +143,4 @@ export class FormShListComponent implements OnInit {
       term.length < 2 ? [] : this.ingNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
     ),
   );
-
-  searchUnits: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
-  text$.pipe(
-    debounceTime(200),
-    distinctUntilChanged(),
-    map((term) =>
-      term.length < 2 ? [] : this.unitNames().filter((v) => v.toLowerCase().includes(term.toLowerCase())).slice(0, 10)
-    ),
-  );
 }

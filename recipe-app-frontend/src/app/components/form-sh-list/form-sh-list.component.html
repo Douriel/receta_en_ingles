@@ -8,17 +8,17 @@
             <label class="input-group-text" for="shListName">Name</label>
             <input class="form-control" id="shListName" type="text" [formField]="shListForm.name">
         </div>
-        <div>
-            <label for="shListDescription">Description</label>
-            <input id="shListDescription" type="text" [formField]="shListForm.notes">
+        <div class="input-group">
+            <label class="input-group-text" for="shListDescription">Description</label>
+            <input class="form-control" id="shListDescription" type="text" [formField]="shListForm.notes">
         </div>
     </div>
     <div class="modal-body">
         <label for="shList">List of ingredients:</label>
         @for (ingredient of shListForm.ingredients; track ingredient) {
-            <div class="name-delete">
-                <label for="ingName">Name</label>
-                <input id="ingName"  type="text" [formField]="ingredient.ingredient.name" [ngbTypeahead]="search">
+            <div class="input-group">
+                <label class="input-group-text">Name</label>
+                <input class="form-control" id="ingName"  type="text" [formField]="ingredient.ingredient.name" [ngbTypeahead]="search">
                 <button type="button" class="btn btn-outline-danger ms-2 w-25" (click)="deleteRowIng($index)"><i class="bi bi-dash"></i>
                 </button>
             </div>
@@ -26,9 +26,9 @@
                 <label class="input-group-text" for="ingUnit">Units</label>
                 <ng-select class="form-control" id="ingUnit"  type="text" [formField]="ingredient.unit" [items]="unitNames()"/>
             </div>
-            <div>
-                <label for="ingQuan">Quantity</label>
-                <input id="ingQuan"  type="number" [formField]="ingredient.quantity">
+            <div class="input-group">
+                <label class="input-group-text" for="ingQuan">Quantity</label>
+                <input class="form-control" id="ingQuan"  type="number" [formField]="ingredient.quantity">
             </div>
         }
         <button type="button" class="btn btn-outline-primary" (click)="addIng()">

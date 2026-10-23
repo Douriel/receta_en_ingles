@@ -4,9 +4,9 @@
 </div>
 <form>
     <div class="modal-body">
-        <div>
-            <label for="tagName">Name</label>
-            <input id="tagName" type="text" [formField]="tagForm.name">
+        <div class="input-group">
+            <label class="input-group-text" for="tagName">Name</label>
+            <input class="form-control" id="tagName" type="text" [formField]="tagForm.name">
         </div>
     </div>
     <div class="modal-footer">
@@ -15,4 +15,4 @@
         }
         <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!tagForm().valid()">Save</button>
     </div>
-</form>        
+</form>

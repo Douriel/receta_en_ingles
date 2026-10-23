@@ -4,25 +4,17 @@
 </div>
 <form>
     <div class="modal-body">
-        <div>
-            <label for="ingName">Name</label>
-            <input id="ingName" type="text" [formField]="ingForm.name">
+        <div class="input-group">
+            <label class="input-group-text" for="ingName">Name</label>
+            <input class="form-control" id="ingName" type="text" [formField]="ingForm.name">
         </div>
-        <div>
-            <label for="ingUnit">Unit</label>
-            <select id="ingUnit" [formField]="ingForm.unit">
-                <option value="Grams">Grams</option>
-                <option value="Kilograms">Kilograms</option>
-                <option value="Mililiters">Mililiters</option>
-                <option value="Liters">Liters</option>
-                <option value="Units">Units</option>
-                <option value="Docens">Docens</option>
-                <option value="Can">Cans</option>
-            </select>
+        <div class="input-group">
+            <label class="input-group-text" for="ingUnit">Units</label>
+            <ng-select class="form-control" id="ingUnit"  type="text" [formField]="ingForm.unit" [items]="unitNames()"/>
         </div>
-        <div>
-            <label for="ingQuantity">Quantity</label>
-            <input id="ingQuantity" type="number" step="1" [formField]="ingForm.quantity">
+        <div class="input-group">
+            <label class="input-group-text" for="ingQuantity">Quantity</label>
+            <input class="form-control" id="ingQuantity" type="number" step="1" [formField]="ingForm.quantity">
         </div>
         <div class="notes-input">
             <label for="ingNotes">Notes</label>

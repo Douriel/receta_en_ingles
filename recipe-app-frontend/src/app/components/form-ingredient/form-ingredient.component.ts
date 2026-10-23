@@ -4,18 +4,19 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IngredientDto } from '../../data/ingredient.dto';
 import { nameExists } from '../../utils/validation.utils';
 import { RestService } from '../../services/rest.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 interface Formdata{
   name: string;
   quantity: number;
   unit: string;
-  notes: string; 
+  notes: string;
 }
 
 
 @Component({
   selector: 'app-form-ingredient',
-  imports: [FormField],
+  imports: [FormField, NgSelectComponent],
   templateUrl: './form-ingredient.component.html',
   styleUrl: './form-ingredient.component.scss'
 })
@@ -23,7 +24,7 @@ export class FormIngredientComponent implements OnInit{
 
   protected editFlag = false;
   ingNames = signal<string[]>([])
-
+  unitNames = signal<string[]>([]);
 
   constructor(
     protected readonly activeModal:NgbActiveModal,
@@ -32,6 +33,7 @@ export class FormIngredientComponent implements OnInit{
 
   ngOnInit(): void {
     this.retrieveListIng();
+    this.retrieveListUnits();
   }
 
   protected retrieveListIng(): void {
@@ -42,6 +44,13 @@ export class FormIngredientComponent implements OnInit{
           this.ingNames.update(names => names.filter(name => this.ingModel().name !== name))
       },
       error: err => console.error('Failed to load ingredients names', err)
+    });
+  }
+
+  protected retrieveListUnits(): void {
+    this.restService.getUnitsNames().subscribe({
+      next: (list: string[]) => this.unitNames.set(list),
+      error: err => console.error('Failed to load units names', err)
     });
   }
 
