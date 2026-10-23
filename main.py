@@ -182,8 +182,9 @@ def get_recipe(recipe_uuid):
     if(stmt is None):
         session.close()
         return JSONResponse(status_code=400, content="Recipe not found")
+    recipe_dto = RecipeDto.from_model(stmt)
     session.close()
-    return JSONResponse(content=jsonable_encoder(RecipeDto.from_model(stmt)))
+    return JSONResponse(content=jsonable_encoder(recipe_dto))
 
 # Create a new recipe
 @app.post("/recipe")
@@ -275,7 +276,6 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
         stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
 
         if(stmt2 is None):
-            session.close()
             tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
         else:
             tags_model.append(stmt2)
@@ -412,7 +412,7 @@ def update_shopping_list(shopping_list_uuid, shopping_list_dto:ShoppingListDto):
         for ingredient_shopping_list_dto in shopping_list_dto.ingredients:
             ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_shopping_list_dto.ingredient.name)).one_or_none()
             if(ingredient is None):
-                ingredient = IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_dto.notes)
+                ingredient = IngredientModel(uuid=str(uuid4()), name=ingredient_shopping_list_dto.ingredient.name, quantity=ingredient_shopping_list_dto.ingredient.quantity, unit=ingredient_shopping_list_dto.unit, notes= ingredient_shopping_list_dto.ingredient.notes)
             ingredientShoppingListModel.append(IngredientShoppingListModel(unit=ingredient_shopping_list_dto.unit, quantity=ingredient_shopping_list_dto.quantity, ingredient=ingredient))
 
         stmt.ingredients = ingredientShoppingListModel
