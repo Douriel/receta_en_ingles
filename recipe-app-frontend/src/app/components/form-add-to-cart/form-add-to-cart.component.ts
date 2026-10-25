@@ -20,8 +20,13 @@ interface Formdata{
   styleUrl: './form-add-to-cart.component.scss',
 })
 export class FormAddToCartComponent implements OnInit{
+debugging() {
+throw new Error('Method not implemented.');
+}
 
   shoppingLists = signal<ShoppingListDto[]>([]);
+  shoppingListsName = signal<string[]>([]);
+  unitNames = signal<string[]>([]);
   ingTitle = signal<string>("");
   ing = signal<IngredientDto|undefined>(undefined);
 
@@ -32,6 +37,8 @@ export class FormAddToCartComponent implements OnInit{
 
   ngOnInit(): void {
     this.retrieveShList();
+    this.retrieveShListNames();
+    this.retrieveListUnits();
   }
 
   private readonly addToCartModel = signal<Formdata>({
@@ -50,9 +57,22 @@ export class FormAddToCartComponent implements OnInit{
       error: err => console.error('Failed to load shopping lists', err)
     });
   }
+  protected retrieveShListNames(): void {
+    this.restService.getShoppingListsNames().subscribe({
+      next: (list: string[]) => this.shoppingListsName.set(list),
+      error: err => console.error('Failed to load shopping lists', err)
+    });
+  }
+  protected retrieveListUnits(): void {
+    this.restService.getUnitsNames().subscribe({
+      next: (list: string[]) => this.unitNames.set(list),
+      error: err => console.error('Failed to load units names', err)
+    });
+  }
 
   setModal(ing: IngredientDto){
     this.ing.set(ing)
+    this.ingTitle.set(ing.name)
     this.addToCartModel.set({
       shListName: "",
       unit: ing.unit,
@@ -67,10 +87,12 @@ export class FormAddToCartComponent implements OnInit{
         ingredient: this.ing(),
         unit: this.addToCartModel().unit,
         quantity: this.addToCartModel().quantity
-      })
+      });
       // It might save the same ingredient multiple times
-      shList.ingredients.push(ingShListDto)
-      this.activeModal.close(shList)
+      //console.log(ingShListDto)
+      shList.ingredients.push(ingShListDto);
+      console.log(shList.ingredients)
+      this.activeModal.close(shList);
     }
   }
 

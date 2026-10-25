@@ -101,9 +101,10 @@ export class FormIngredientComponent implements OnInit{
     this.modalTitle.set("Edit the ingredient");
   }
 
-  protected addToCart(ingEdit: IngredientDto): void{
+  protected addToCart(): void{
     const modalRef = this.ngbModal.open(FormAddToCartComponent);
     const modal: FormAddToCartComponent = modalRef.componentInstance;
+    const ingEdit: IngredientDto = new IngredientDto(this.ingModel())
     modal.setModal(ingEdit);
 
     modalRef.closed.subscribe({

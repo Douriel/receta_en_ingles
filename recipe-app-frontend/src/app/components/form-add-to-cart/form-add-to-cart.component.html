@@ -1,4 +1,24 @@
 <div class="modal-header">
-    <h4 class="modal-title">Add {{ingTitle()}} to the shopping ist</h4>
+    <h4 class="modal-title">Add {{ingTitle()}} to the shopping list</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
+<form>
+    <div class="modal-body">
+        <div class="input-group">
+            <label class="input-group-text" for="shLsName">Shopping list Name</label>
+            <ng-select class="form-control" id="shLsName" type="text" [formField]="addToCartForm.shListName" [items]="shoppingListsName()"/>
+        </div>
+        <div class="input-group">
+            <label class="input-group-text" for="unit">Unit</label>
+            <ng-select class="form-control" id="unit" type="text" [formField]="addToCartForm.unit" [items]="unitNames()"/>
+        </div>
+        <div class="input-group">
+            <label class="input-group-text" for="Quantity">Quantity</label>
+            <input class="form-control" id="Quantity" type="number" step="1" [formField]="addToCartForm.quantity">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
+        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!addToCartForm().valid()">Save</button>
+    </div>
+</form>
