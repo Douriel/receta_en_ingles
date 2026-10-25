@@ -79,6 +79,6 @@ export class StoreroomComponent implements OnInit {
   protected searchElement(element: string): void {
     this.ingredientListAux.set(this.ingredientList().filter(ing => {
       return ing.name.toLowerCase().includes(element.toLowerCase());
-    })); 
+    }));
   }
 }

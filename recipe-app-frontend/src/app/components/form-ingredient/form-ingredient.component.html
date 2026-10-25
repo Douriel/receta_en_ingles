@@ -1,6 +1,5 @@
 <div class="modal-header">
     <h4 class="modal-title">{{modalTitle()}}</h4>
-    <button (click)="addToCart()" type="button">Add a recipe</button>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
 <form>
@@ -23,12 +22,13 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>
+        <!--<button type="button" class="btn btn-outline-secondary" (click)="debugging()">Debugging</button>-->
 
         @if(editFlag){
-            <button type="button" class="btn btn-outline-danger" (click)="deleteIng()">Delete</button>
+            <button type="button" class="btn btn-danger" (click)="deleteIng()">Delete</button>
+            <button type="button" class="btn btn-outline-primary bi bi-cart2" (click)="addToCart()" type="button"></button>
         }
 
-        <button type="button" class="btn btn-outline-primary" (click)="submitForm()" [disabled]="!ingForm().valid()">Save</button>
+        <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!ingForm().valid()">Save</button>
     </div>
 </form>
