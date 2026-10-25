@@ -81,6 +81,7 @@ throw new Error('Method not implemented.');
   }
 
   protected submitForm(){
+    if (!this.ing()) return;
     if(this.addToCartForm().valid()){
       const shList: ShoppingListDto =  this.shoppingLists().find(shListName => shListName.name === this.addToCartModel().shListName)!
       const ingShListDto = new IngredientShoppongListDto({

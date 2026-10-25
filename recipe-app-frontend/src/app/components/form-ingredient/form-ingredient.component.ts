@@ -105,13 +105,17 @@ export class FormIngredientComponent implements OnInit{
     const modalRef = this.ngbModal.open(FormAddToCartComponent);
     const modal: FormAddToCartComponent = modalRef.componentInstance;
     const ingEdit: IngredientDto = new IngredientDto(this.ingModel())
+    console.log(ingEdit)
     modal.setModal(ingEdit);
 
     modalRef.closed.subscribe({
       next: (shList: ShoppingListDto) => {
-        this.restService.updateShoppingList(shList)
+        this.restService.updateShoppingList(shList).subscribe({
+          next: () => console.log('Shopping list updated successfully'),
+          error: err => console.error('Shopping list not updated correctly', err)
+        })
       },
-      error: err => console.error('Shopping List not updated correcty')
+      error: err => console.error('Modal closed with error', err)
     })
   }
 }
