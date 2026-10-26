@@ -31,5 +31,5 @@ export const routes: Routes = [
         path: 'shopping-list',
         component: ShoppingListComponent,
         title: 'Shopping List'
-    } 
+    },
 ];
