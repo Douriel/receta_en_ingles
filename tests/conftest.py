@@ -18,7 +18,7 @@ from sqlalchemy.pool import StaticPool
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import main  # noqa: E402
-from bbdd_v2 import Base  # noqa: E402
+from bbdd_v3 import Base  # noqa: E402
 
 
 @pytest.fixture

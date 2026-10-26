@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from uuid import UUID
-from bbdd_v2 import UnitModel
+from bbdd_v3 import UnitModel
 
 class UnitDto(BaseModel):
     uuid : str

@@ -17,12 +17,12 @@ from sqlalchemy import delete, select, create_engine, update
 from sqlalchemy.sql import collate
 
 
-from bbdd_v2 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel, UnitModel
+from bbdd_v3 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel, UnitModel
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
 
-engine = create_engine("sqlite:///test2.db", echo=True)
+engine = create_engine("sqlite:///test3.db", echo=True)
 
 
 
