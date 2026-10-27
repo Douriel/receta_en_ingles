@@ -73,7 +73,7 @@ class RecipeModel(Base):
     description : Mapped[str] = mapped_column(Text(), default="")
     steps : Mapped[str] = mapped_column(Text(), default="")
     ingredients: Mapped[List["IngredientRecipeModel"]] = relationship(
-        back_populates="shopping_list", cascade="all, delete, delete-orphan"
+        back_populates="recipe", cascade="all, delete, delete-orphan"
     )
     tags: Mapped[List["TagModel"]] = relationship(
         back_populates="recipes", secondary=recipe_tag
@@ -104,7 +104,7 @@ class UnitModel(Base):
     def __repr__(self) -> str:
         return f"id(id={self.id!r}, name={self.name!r})"
 
-engine = create_engine("sqlite:///test2.db", echo=True)
+engine = create_engine("sqlite:///test3.db", echo=True)
 Base.metadata.create_all(engine)
 
 

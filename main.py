@@ -17,14 +17,12 @@ from sqlalchemy import delete, select, create_engine, update
 from sqlalchemy.sql import collate
 
 
-from bbdd_v3 import IngredientModel, IngredientShoppingListModel, RecipeModel, ShoppingListModel, TagModel, UnitModel
+from bbdd_v3 import IngredientModel, IngredientShoppingListModel, RecipeModel, IngredientRecipeModel, ShoppingListModel, TagModel, UnitModel
 
 from uuid import uuid4, UUID
 from fastapi.middleware.cors import CORSMiddleware
 
 engine = create_engine("sqlite:///test3.db", echo=True)
-
-
 
 
 app = FastAPI()
@@ -187,6 +185,7 @@ def get_recipe(recipe_uuid):
     return JSONResponse(content=jsonable_encoder(recipe_dto))
 
 # Create a new recipe
+'''
 @app.post("/recipe")
 def create_recipe(recipe:RecipeDto):
     session = Session(engine)
@@ -225,6 +224,62 @@ def create_recipe(recipe:RecipeDto):
     session.commit()
     session.close()
     return JSONResponse(content="Recipe created")
+'''
+@app.post("/recipe")
+def create_recipe(recipe:RecipeDto):
+    with Session(engine) as session:
+        # First I need to check what is if the recipe has been created before
+        recipe_model = session.scalars(select(RecipeModel).where(RecipeModel.name == recipe.name)).one_or_none()
+        if(recipe_model is not None):
+            session.close()
+            return JSONResponse(status_code=400, content="The recipe already exist")
+
+        # Middleman object
+        recipe_associations = []
+
+        for ingrediente_recipe_dto in recipe.ingredients:
+            ingredient = session.scalars(select(IngredientModel).where(IngredientModel.name == ingrediente_recipe_dto.ingredient.name)).one_or_none()
+
+            if(ingredient is None):
+                ingredient = IngredientModel(
+                    uuid=str(uuid4()),
+                    name=ingrediente_recipe_dto.ingredient.name,
+                    quantity=0,
+                    unit=ingrediente_recipe_dto.unit,
+                    notes=ingrediente_recipe_dto.ingredient.notes
+            )
+
+            assoc = IngredientRecipeModel(
+                ingredient=ingredient,
+                unit=ingrediente_recipe_dto.unit,
+                quantity=ingrediente_recipe_dto.quantity
+            )
+
+            recipe_associations.append(assoc)
+
+            tags_model:List[TagModel] = []
+
+        for tag_dto in recipe.tags:
+            tag = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
+
+            if(tag is None):
+                tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
+            else:
+                tags_model.append(tag)
+
+        recipe_model = RecipeModel(
+            uuid = str(uuid4()),
+            name = recipe.name,
+            time = recipe.time,
+            description = recipe.description,
+            steps= recipe.steps,
+            ingredients = recipe_associations,
+            tags = tags_model
+        )
+
+        session.add(recipe_model)
+        session.commit()
+        return JSONResponse(status_code=200, content="Recipe created")
 
 
 # Delete a recipe
@@ -351,29 +406,29 @@ def create_shopping_list(shopping_list:ShoppingListDto):
 
             if(ingredient is None):
                 ingredient = IngredientModel(
-                    uuid=str(uuid4()),
-                    name=ingredient_shopping_list_dto.ingredient.name,
-                    quantity=0,
-                    unit=ingredient_shopping_list_dto.unit,
-                    notes=ingredient_shopping_list_dto.ingredient.notes
+                    uuid = str(uuid4()),
+                    name = ingredient_shopping_list_dto.ingredient.name,
+                    quantity = 0,
+                    unit = ingredient_shopping_list_dto.unit,
+                    notes = ingredient_shopping_list_dto.ingredient.notes
             )
             #else:
                 ####### How the units are treated will be a problem in the future for addition or substraction of quantities.
                 #ingredient_shopping_list_dto.unit= ingredient.unit
 
             assoc = IngredientShoppingListModel(
-                ingredient=ingredient,
-                unit=ingredient_shopping_list_dto.unit,
-                quantity=ingredient_shopping_list_dto.quantity
+                ingredient = ingredient,
+                unit = ingredient_shopping_list_dto.unit,
+                quantity = ingredient_shopping_list_dto.quantity
             )
 
             shopping_list_associations.append(assoc)
 
         shopping_list_model = ShoppingListModel(
-            uuid=str(uuid4()),
-            name=shopping_list.name,
-            notes=shopping_list.notes,
-            ingredients=shopping_list_associations # Pass the middleman objects here!
+            uuid = str(uuid4()),
+            name = shopping_list.name,
+            notes = shopping_list.notes,
+            ingredients = shopping_list_associations # Pass the middleman objects here!
         )
 
         session.add(shopping_list_model)
