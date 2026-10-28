@@ -257,7 +257,7 @@ def create_recipe(recipe:RecipeDto):
 
             recipe_associations.append(assoc)
 
-            tags_model:List[TagModel] = []
+        tags_model:List[TagModel] = []
 
         for tag_dto in recipe.tags:
             tag = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()

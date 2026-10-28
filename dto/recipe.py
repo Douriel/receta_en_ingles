@@ -1,3 +1,4 @@
+from dto.ingredient_recipe import IngredientRecipeDto
 from dto.tag import Tag_dto
 from pydantic import BaseModel
 from uuid import UUID
@@ -12,7 +13,7 @@ class RecipeDto(BaseModel):
     time : int
     description : str
     steps : str
-    ingredients : list[IngredientDto]
+    ingredients : list[IngredientRecipeDto]
     tags : list[Tag_dto]
 
     @staticmethod
@@ -22,5 +23,5 @@ class RecipeDto(BaseModel):
                          time = recipe_model.time,
                          description = recipe_model.description,
                          steps = recipe_model.steps,
-                         ingredients = [IngredientRecipeModel.from_model(assoc) for assoc in recipe_model.ingredients],
+                         ingredients = [IngredientRecipeDto.from_model(assoc) for assoc in recipe_model.ingredients],
                          tags = [Tag_dto.from_model(tag) for tag in recipe_model.tags])
