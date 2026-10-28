@@ -185,46 +185,6 @@ def get_recipe(recipe_uuid):
     return JSONResponse(content=jsonable_encoder(recipe_dto))
 
 # Create a new recipe
-'''
-@app.post("/recipe")
-def create_recipe(recipe:RecipeDto):
-    session = Session(engine)
-
-    # Check if the recipe already exist on the DB
-    stmt = session.scalars(select(RecipeModel).where(RecipeModel.name == recipe.name)).one_or_none()
-
-    if(stmt is not None):
-        session.close()
-        return JSONResponse(status_code=400, content="The recipe already exist")
-
-    ingredients_model:List[IngredientModel] = []
-
-    for ingredient_dto in recipe.ingredients:
-        stmt2 = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name)).one_or_none()
-
-        if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
-        else:
-            ingredients_model.append(stmt2)
-
-    tags_model:List[TagModel] = []
-
-    for tag_dto in recipe.tags:
-        stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
-
-        if(stmt2 is None):
-            tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
-        else:
-            tags_model.append(stmt2)
-
-
-    recipe_model = RecipeModel(uuid = str(uuid4()), name = recipe.name, time = recipe.time, description = recipe.description, steps = recipe.steps, ingredients = ingredients_model, tags = tags_model)
-
-    session.add(recipe_model)
-    session.commit()
-    session.close()
-    return JSONResponse(content="Recipe created")
-'''
 @app.post("/recipe")
 def create_recipe(recipe:RecipeDto):
     with Session(engine) as session:
@@ -302,45 +262,43 @@ def delete_recipe(recipe_uuid):
 # Update a recipe
 @app.put("/recipe/{recipe_uuid}")
 def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
-    session = Session(engine)
+    with Session(engine) as session:
+        recipe_model = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
 
-    stmt = session.scalar(select(RecipeModel).where(RecipeModel.uuid == recipe_uuid))
+        if(recipe_model is None):
+            session.close()
+            return JSONResponse(status_code=400, content="Recipe not found")
 
-    if(stmt is None):
-        session.close()
-        return JSONResponse(status_code=400, content="Recipe not found")
+        recipe_model.name = recipe_dto.name
+        recipe_model.time = recipe_dto.time
+        recipe_model.description = recipe_dto.description
+        recipe_model.steps = recipe_dto.steps
 
-    stmt.name = recipe_dto.name
-    stmt.time = recipe_dto.time
-    stmt.description = recipe_dto.description
-    stmt.steps = recipe_dto.steps
+        ingredients_recipe_model:List[IngredientRecipeModel] = []
 
-    ingredients_model:List[IngredientModel] = []
+        for ingredient_recipe_dto in recipe_dto.ingredients:
+            ingredient_model = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_recipe_dto.ingredient.name)).one_or_none()
 
-    for ingredient_dto in recipe_dto.ingredients:
-        stmt2 = session.scalar(select(IngredientModel).where(IngredientModel.name == ingredient_dto.name))
+            if(ingredient_model is None):
+                ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient_recipe_dto.ingredient.name, quantity=ingredient_recipe_dto.ingredient.quantity, unit=ingredient_recipe_dto.unit)
 
-        if(stmt2 is None):
-            ingredients_model.append(IngredientModel(uuid=str(uuid4()), name=ingredient_dto.name, quantity=ingredient_dto.quantity, unit=ingredient_dto.unit, notes= ingredient_dto.notes))
-        else:
-            ingredients_model.append(stmt2)
+            ingredients_recipe_model.append(IngredientRecipeModel(ingredient=ingredient_model, unit=ingredient_recipe_dto.unit, quantity=ingredient_recipe_dto.quantity))
 
-    tags_model:List[TagModel] = []
+        tags_model:List[TagModel] = []
 
-    for tag_dto in recipe_dto.tags:
-        stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
+        for tag_dto in recipe_dto.tags:
+            stmt2 = session.scalars(select(TagModel).where(TagModel.name == tag_dto.name)).one_or_none()
 
-        if(stmt2 is None):
-            tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
-        else:
-            tags_model.append(stmt2)
+            if(stmt2 is None):
+                tags_model.append(TagModel(uuid=str(uuid4()), name=tag_dto.name))
+            else:
+                tags_model.append(stmt2)
 
 
-    stmt.ingredients = ingredients_model
-    stmt.tags = tags_model
-    session.commit()
-    session.close()
-    return JSONResponse(status_code=200, content="Recipe updated")
+        recipe_model.ingredients = ingredients_recipe_model
+        recipe_model.tags = tags_model
+        session.commit()
+        return JSONResponse(status_code=200, content="Recipe updated")
 
 
 ## CRUD methods related with shoppingList
