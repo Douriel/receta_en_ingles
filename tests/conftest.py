@@ -1,7 +1,7 @@
 """Shared pytest fixtures for the main.py service tests.
 
 Every test runs against a fresh in-memory SQLite database so the real
-``test2.db`` is never touched. We swap the module-level ``engine`` that the
+``test3.db`` is never touched. We swap the module-level ``engine`` that the
 endpoints in ``main.py`` use for a throwaway one, create the schema, and hand
 back a ``TestClient`` to drive the FastAPI routes.
 """
@@ -95,6 +95,19 @@ def make_shopping_list(name="Weekly", notes="", ingredients=None, uuid=""):
 
 def make_shopping_list_item(ingredient=None, unit="g", quantity=1):
     """Build an IngredientShoppingListDto-shaped payload."""
+    return {
+        "unit": unit,
+        "quantity": quantity,
+        "ingredient": ingredient if ingredient is not None else make_ingredient(),
+    }
+
+
+def make_recipe_item(ingredient=None, unit="g", quantity=1):
+    """Build an IngredientRecipeDto-shaped payload.
+
+    Recipes now store ingredients via an association object (IngredientRecipeModel)
+    that carries its own ``unit`` and ``quantity``, mirroring the shopping-list pattern.
+    """
     return {
         "unit": unit,
         "quantity": quantity,

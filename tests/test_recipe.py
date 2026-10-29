@@ -1,6 +1,6 @@
 """Tests for the recipe CRUD services in main.py."""
 
-from conftest import make_ingredient, make_recipe, make_tag
+from conftest import make_ingredient, make_recipe, make_recipe_item, make_tag
 
 
 def _create(client, **kwargs):
@@ -27,14 +27,15 @@ def test_create_recipe_with_new_ingredients_and_tags(client):
     resp = _create(
         client,
         name="Tomato soup",
-        ingredients=[make_ingredient(name="Tomato", quantity=4, unit="pcs")],
+        ingredients=[make_recipe_item(ingredient=make_ingredient(name="Tomato", quantity=4, unit="pcs"), unit="pcs", quantity=4)],
         tags=[make_tag(name="Soup")],
     )
     assert resp.status_code == 200
 
     recipe = client.get("/recipe").json()[0]
     assert len(recipe["ingredients"]) == 1
-    assert recipe["ingredients"][0]["name"] == "Tomato"
+    assert recipe["ingredients"][0]["ingredient"]["name"] == "Tomato"
+    assert recipe["ingredients"][0]["unit"] == "pcs"
     assert recipe["tags"][0]["name"] == "Soup"
 
     # The nested ingredient should also be persisted as a standalone ingredient.
@@ -47,7 +48,7 @@ def test_create_recipe_reuses_existing_ingredient(client):
     _create(
         client,
         name="Scramble",
-        ingredients=[make_ingredient(name="Egg", quantity=2, unit="pcs")],
+        ingredients=[make_recipe_item(ingredient=make_ingredient(name="Egg", quantity=2, unit="pcs"), unit="pcs", quantity=2)],
     )
 
     # Still only a single Egg ingredient in the catalogue (reused, not duplicated).
@@ -98,7 +99,7 @@ def test_update_recipe(client):
             time=15,
             description="Mediterranean",
             steps="Chop and toss",
-            ingredients=[make_ingredient(name="Feta", quantity=100, unit="g")],
+            ingredients=[make_recipe_item(ingredient=make_ingredient(name="Feta", quantity=100, unit="g"), unit="g", quantity=100)],
             tags=[make_tag(name="Healthy")],
         ),
     )
@@ -108,7 +109,8 @@ def test_update_recipe(client):
     updated = client.get(f"/recipe/{uuid}").json()
     assert updated["name"] == "Greek Salad"
     assert updated["time"] == 15
-    assert updated["ingredients"][0]["name"] == "Feta"
+    assert updated["ingredients"][0]["ingredient"]["name"] == "Feta"
+    assert updated["ingredients"][0]["quantity"] == 100
     assert updated["tags"][0]["name"] == "Healthy"
 
 

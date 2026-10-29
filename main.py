@@ -280,7 +280,7 @@ def update_recipe(recipe_uuid, recipe_dto:RecipeDto):
             ingredient_model = session.scalars(select(IngredientModel).where(IngredientModel.name == ingredient_recipe_dto.ingredient.name)).one_or_none()
 
             if(ingredient_model is None):
-                ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient_recipe_dto.ingredient.name, quantity=ingredient_recipe_dto.ingredient.quantity, unit=ingredient_recipe_dto.unit)
+                ingredient_model = IngredientModel(uuid=str(uuid4()), name=ingredient_recipe_dto.ingredient.name, quantity=ingredient_recipe_dto.ingredient.quantity, unit=ingredient_recipe_dto.unit, notes=ingredient_recipe_dto.ingredient.notes)
 
             ingredients_recipe_model.append(IngredientRecipeModel(ingredient=ingredient_model, unit=ingredient_recipe_dto.unit, quantity=ingredient_recipe_dto.quantity))
 
